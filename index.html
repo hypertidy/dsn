@@ -71,6 +71,13 @@
 <!-- badges: start -->
 
 <p>The goal of dsn is to provide simple helpers for GDAL data source name prefixes and related string handling.</p>
+<p>Please note that dsn is not doing anything <em>with GDAL</em>, this is pure string handling for things commonly use for GDAL:</p>
+<ul>
+<li>prepending ‘/viscurl/’ to an online data source url for <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">GDAL’s Virtual File System</a>
+</li>
+<li>prepending a driver declaration to a data source, e.g. “HDF5:/my/files/data.h5” or “NETCDF:C:/temp/nc/afile.nc”</li>
+</ul>
+<p>Please see <code>vapour::vapour_vrt()</code> for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and will probably add helpers for the ‘vrt://’ connection syntax as well.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -82,7 +89,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>This is a basic example, add in the prefix for a vsicurl</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/prefix.html">vsicurl</a></span><span class="op">(</span><span class="st">"https://netcdf-r-us.org/f.nc"</span><span class="op">)</span></span>
@@ -96,6 +103,13 @@
 <span></span>
 <span><span class="fu"><a href="reference/prefix.html">unprefix</a></span><span class="op">(</span><span class="st">"NETCDF:/u/user/somefile.nc"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/u/user/somefile.nc"</span></span></code></pre></div>
+<p>NetCDF is a very common source and occasionally requires explicit driver declaration, so we have a simple <code><a href="reference/prefix.html">driver()</a></code> wrapper for that.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prefix.html">netcdf</a></span><span class="op">(</span><span class="st">"/u/user/somfile.nc"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "NETCDF:/u/user/somfile.nc"</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/prefix.html">unprefix</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "/u/user/somfile.nc"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>

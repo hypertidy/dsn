@@ -21,6 +21,13 @@ knitr::opts_chunk$set(
 
 The goal of dsn is to provide simple helpers for GDAL data source name prefixes and related string handling. 
 
+Please note that dsn is not doing anything *with GDAL*, this is pure string handling for things commonly use for GDAL: 
+
+- prepending '/viscurl/' to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
+- prepending a driver declaration to a data source, e.g. "HDF5:/my/files/data.h5" or "NETCDF:C:/temp/nc/afile.nc"
+
+Please see `vapour::vapour_vrt()` for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and will probably add helpers for the 'vrt://' connection syntax as well. 
+
 ## Installation
 
 You can install the development version of dsn from [GitHub](https://github.com/) with:
@@ -32,7 +39,7 @@ devtools::install_github("hypertidy/dsn")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example, add in the prefix for a vsicurl
 
 ```{r example}
 library(dsn)
@@ -46,6 +53,13 @@ unprefix("NETCDF:/u/user/somefile.nc")
 ```
 
 
+NetCDF is a very common source and occasionally requires explicit driver declaration, so we have a simple `driver()` wrapper for that. 
+
+```{r netcdf}
+(nc <- netcdf("/u/user/somfile.nc"))
+
+unprefix(nc)
+```
 
 ## Code of Conduct
   

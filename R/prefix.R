@@ -4,7 +4,7 @@
 #' Add required prefixes, or remove them.
 #'
 #' @param x character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)
-#'
+#' @param driver character vector of appropriate GDAL driver name
 #' @return character vector
 #'
 #' @name prefix

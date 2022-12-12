@@ -73,9 +73,11 @@
 <p>The goal of dsn is to provide simple helpers for GDAL data source name prefixes and related string handling.</p>
 <p>Please note that dsn is not doing anything <em>with GDAL</em>, this is pure string handling for things commonly use for GDAL:</p>
 <ul>
-<li>prepending ‘/viscurl/’ to an online data source url for <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">GDAL’s Virtual File System</a>
+<li>prefixing’/viscurl/’ to an online data source url for <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">GDAL’s Virtual File System</a>
 </li>
-<li>prepending a driver declaration to a data source, e.g. “HDF5:/my/files/data.h5” or “NETCDF:C:/temp/nc/afile.nc”</li>
+<li>prefixing a driver declaration to a data source, e.g. “HDF5:/my/files/data.h5” or “NETCDF:C:/temp/nc/afile.nc”</li>
+<li>wrapping a subdataset declaration, e.g. “NETCDF:/myfiles/data.nc:variable”</li>
+<li>wrapping a VRT connection, e.g. “vrt://myfile.tif?bands=3,2,1”</li>
 </ul>
 <p>Please see <code>vapour::vapour_vrt()</code> for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and will probably add helpers for the ‘vrt://’ connection syntax as well.</p>
 <div class="section level2">
@@ -89,7 +91,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example, add in the prefix for a vsicurl</p>
+<p>This is a basic example, add in the prefix for a vsicurl.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/prefix.html">vsicurl</a></span><span class="op">(</span><span class="st">"https://netcdf-r-us.org/f.nc"</span><span class="op">)</span></span>
@@ -110,6 +112,108 @@
 <span></span>
 <span><span class="fu"><a href="reference/prefix.html">unprefix</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/u/user/somfile.nc"</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="real-world-example">Real world example<a class="anchor" aria-label="anchor" href="#real-world-example"></a>
+</h2>
+<p>Here is a less basic and real world example.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
+<p>These files have four variables and so need to be referenced using subdataset syntax. They are online so we need GDAL’s virtual file system ‘vsicurl’ to access it. Also, they are non-compliant NetCDF in that they don’t declare in a robust way what their coordinate reference system is (it’s longlat).</p>
+<p>(Even if you have the files locally you still need the subdataset and crs handling).</p>
+<p>So, we can find this stuff out with investigation. See there are subdatasets ‘sst’, ‘anom’, ‘err’, ‘ice’.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">u</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span></span>
+<span><span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_raster_info</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsicurl"</span>, <span class="va">u</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $geotransform</span></span>
+<span><span class="co">#&gt; [1] 0 1 0 0 0 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dimension</span></span>
+<span><span class="co">#&gt; [1] 512 512</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $dimXY</span></span>
+<span><span class="co">#&gt; [1] 512 512</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $minmax</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $block</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $projection</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $bands</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $projstring</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $nodata_value</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $overviews</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $filelist</span></span>
+<span><span class="co">#&gt; [1] "/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $datatype</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $extent</span></span>
+<span><span class="co">#&gt; [1]   0 512 512   0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $subdatasets</span></span>
+<span><span class="co">#&gt; [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst" </span></span>
+<span><span class="co">#&gt; [2] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":anom"</span></span>
+<span><span class="co">#&gt; [3] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":err" </span></span>
+<span><span class="co">#&gt; [4] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":ice"</span></span></code></pre></div>
+<p>And, with GDAL tools we can augment the missing metadata and get the subdatasets etc.</p>
+<p>Please note that the subdatasets might not always be in order, you really need to ask for them by name.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_sds_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsicurl"</span>, <span class="va">u</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst"</span></span></code></pre></div>
+<p>Finally, now we take that subdataset and augment it (this creates a GDAL open dataset in memory, and serializes it to in-memory VRT text).</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">vrt</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_vrt</span><span class="op">(</span><span class="va">sds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, projection <span class="op">=</span> <span class="st">"OGC:CRS84"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">vrt</span></span>
+<span><span class="co">#&gt; [1] "&lt;VRTDataset rasterXSize=\"1440\" rasterYSize=\"720\"&gt;\n  &lt;SRS dataAxisToSRSAxisMapping=\"1,2\"&gt;GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Longitude\",EAST],AXIS[\"Latitude\",NORTH]]&lt;/SRS&gt;\n  &lt;GeoTransform&gt;  0.0000000000000000e+00,  2.5000000000000000e-01,  0.0000000000000000e+00,  9.0000000000000000e+01,  0.0000000000000000e+00, -2.5000000000000000e-01&lt;/GeoTransform&gt;\n  &lt;Metadata&gt;\n    &lt;MDI key=\"lat#grids\"&gt;Uniform grid from -89.875 to 89.875 by 0.25&lt;/MDI&gt;\n    &lt;MDI key=\"lat#long_name\"&gt;Latitude&lt;/MDI&gt;\n    &lt;MDI key=\"lat#units\"&gt;degrees_north&lt;/MDI&gt;\n    &lt;MDI key=\"lon#grids\"&gt;Uniform grid from 0.125 to 359.875 by 0.25&lt;/MDI&gt;\n    &lt;MDI key=\"lon#long_name\"&gt;Longitude&lt;/MDI&gt;\n    &lt;MDI key=\"lon#units\"&gt;degrees_east&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#cdm_data_type\"&gt;Grid&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#comment\"&gt;Data was converted from NetCDF-3 to NetCDF-4 format with metadata updates in November 2017.&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#Conventions\"&gt;CF-1.6, ACDD-1.3&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#creator_email\"&gt;oisst-help@noaa.gov&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#creator_url\"&gt;https://www.ncei.noaa.gov/&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#date_created\"&gt;2021-10-15T09:12:00Z&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#date_modified\"&gt;2021-10-15T09:12:00Z&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lat_max\"&gt;90&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lat_min\"&gt;-90&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lat_resolution\"&gt;0.25&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lat_units\"&gt;degrees_north&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lon_max\"&gt;360&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lon_min\"&gt;0&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lon_resolution\"&gt;0.25&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#geospatial_lon_units\"&gt;degrees_east&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#history\"&gt;Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data.&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#id\"&gt;oisst-avhrr-v02r01.20210930.nc&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#institution\"&gt;NOAA/National Centers for Environmental Information&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#instrument\"&gt;Earth Remote Sensing Instruments &amp;gt; Passive Remote Sensing &amp;gt; Spectrometers/Radiometers &amp;gt; Imaging Spectrometers/Radiometers &amp;gt; AVHRR &amp;gt; Advanced Very High Resolution Radiometer&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#instrument_vocabulary\"&gt;Global Change Master Directory (GCMD) Instrument Keywords&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#keywords\"&gt;Earth Science &amp;gt; Oceans &amp;gt; Ocean Temperature &amp;gt; Sea Surface Temperature&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#keywords_vocabulary\"&gt;Global Change Master Directory (GCMD) Earth Science Keywords&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#metadata_link\"&gt;https://doi.org/10.25921/RE9P-PT57&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#naming_authority\"&gt;gov.noaa.ncei&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#ncei_template_version\"&gt;NCEI_NetCDF_Grid_Template_v2.0&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#platform\"&gt;Ships, buoys, Argo floats, MetOp-A, MetOp-B&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#platform_vocabulary\"&gt;Global Change Master Directory (GCMD) Platform Keywords&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#processing_level\"&gt;NOAA Level 4&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#product_version\"&gt;Version v02r01&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#references\"&gt;Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST and Navy AVHRR SST. Ice data: NCEP Ice and GSFC Ice.&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#sensor\"&gt;Thermometer, AVHRR&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#source\"&gt;ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#standard_name_vocabulary\"&gt;CF Standard Name Table (v40, 25 January 2017)&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#summary\"&gt;NOAAs 1/4-degree Daily Optimum Interpolation Sea Surface Temperature (OISST) (sometimes referred to as Reynolds SST, which however also refers to earlier products at different resolution), currently available as version v02r01, is created by interpolating and extrapolating SST observations from different sources, resulting in a smoothed complete field. The sources of data are satellite (AVHRR) and in situ platforms (i.e., ships and buoys), and the specific datasets employed may change over time. At the marginal ice zone, sea ice concentrations are used to generate proxy SSTs.  A preliminary version of this file is produced in near-real time (1-day latency), and then replaced with a final version after 2 weeks. Note that this is the AVHRR-ONLY DOISST, available from Oct 1981, but there is a companion DOISST product that includes microwave satellite data, available from June 2002&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#time_coverage_end\"&gt;2021-09-30T23:59:59Z&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#time_coverage_start\"&gt;2021-09-30T00:00:00Z&lt;/MDI&gt;\n    &lt;MDI key=\"NC_GLOBAL#title\"&gt;NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final&lt;/MDI&gt;\n    &lt;MDI key=\"NETCDF_DIM_EXTRA\"&gt;{time,zlev}&lt;/MDI&gt;\n    &lt;MDI key=\"NETCDF_DIM_time_DEF\"&gt;{1,5}&lt;/MDI&gt;\n    &lt;MDI key=\"NETCDF_DIM_time_VALUES\"&gt;15978&lt;/MDI&gt;\n    &lt;MDI key=\"NETCDF_DIM_zlev_DEF\"&gt;{1,5}&lt;/MDI&gt;\n    &lt;MDI key=\"NETCDF_DIM_zlev_VALUES\"&gt;0&lt;/MDI&gt;\n    &lt;MDI key=\"sst#add_offset\"&gt;0&lt;/MDI&gt;\n    &lt;MDI key=\"sst#long_name\"&gt;Daily sea surface temperature&lt;/MDI&gt;\n    &lt;MDI key=\"sst#scale_factor\"&gt;0.0099999998&lt;/MDI&gt;\n    &lt;MDI key=\"sst#units\"&gt;Celsius&lt;/MDI&gt;\n    &lt;MDI key=\"sst#valid_max\"&gt;4500&lt;/MDI&gt;\n    &lt;MDI key=\"sst#valid_min\"&gt;-300&lt;/MDI&gt;\n    &lt;MDI key=\"sst#_FillValue\"&gt;-999&lt;/MDI&gt;\n    &lt;MDI key=\"time#long_name\"&gt;Center time of the day&lt;/MDI&gt;\n    &lt;MDI key=\"time#units\"&gt;days since 1978-01-01 12:00:00&lt;/MDI&gt;\n    &lt;MDI key=\"zlev#actual_range\"&gt;0, 0&lt;/MDI&gt;\n    &lt;MDI key=\"zlev#long_name\"&gt;Sea surface height&lt;/MDI&gt;\n    &lt;MDI key=\"zlev#positive\"&gt;down&lt;/MDI&gt;\n    &lt;MDI key=\"zlev#units\"&gt;meters&lt;/MDI&gt;\n  &lt;/Metadata&gt;\n  &lt;VRTRasterBand dataType=\"Int16\" band=\"1\"&gt;\n    &lt;Metadata&gt;\n      &lt;MDI key=\"add_offset\"&gt;0&lt;/MDI&gt;\n      &lt;MDI key=\"long_name\"&gt;Daily sea surface temperature&lt;/MDI&gt;\n      &lt;MDI key=\"NETCDF_DIM_time\"&gt;15978&lt;/MDI&gt;\n      &lt;MDI key=\"NETCDF_DIM_zlev\"&gt;0&lt;/MDI&gt;\n      &lt;MDI key=\"NETCDF_VARNAME\"&gt;sst&lt;/MDI&gt;\n      &lt;MDI key=\"scale_factor\"&gt;0.0099999998&lt;/MDI&gt;\n      &lt;MDI key=\"units\"&gt;Celsius&lt;/MDI&gt;\n      &lt;MDI key=\"valid_max\"&gt;4500&lt;/MDI&gt;\n      &lt;MDI key=\"valid_min\"&gt;-300&lt;/MDI&gt;\n      &lt;MDI key=\"_FillValue\"&gt;-999&lt;/MDI&gt;\n    &lt;/Metadata&gt;\n    &lt;NoDataValue&gt;-999&lt;/NoDataValue&gt;\n    &lt;UnitType&gt;Celsius&lt;/UnitType&gt;\n    &lt;Scale&gt;0.009999999776482582&lt;/Scale&gt;\n    &lt;SimpleSource&gt;\n      &lt;SourceFilename relativeToVRT=\"0\"&gt;NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst&lt;/SourceFilename&gt;\n      &lt;SourceBand&gt;1&lt;/SourceBand&gt;\n      &lt;SourceProperties RasterXSize=\"1440\" RasterYSize=\"720\" DataType=\"Int16\" BlockXSize=\"1440\" BlockYSize=\"720\" /&gt;\n      &lt;SrcRect xOff=\"0\" yOff=\"0\" xSize=\"1440\" ySize=\"720\" /&gt;\n      &lt;DstRect xOff=\"0\" yOff=\"0\" xSize=\"1440\" ySize=\"720\" /&gt;\n    &lt;/SimpleSource&gt;\n  &lt;/VRTRasterBand&gt;\n&lt;/VRTDataset&gt;\n"</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_raster_info</span><span class="op">(</span><span class="va">vrt</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 14</span></span>
+<span><span class="co">#&gt;  $ geotransform: num [1:6] 0 0.25 0 90 0 -0.25</span></span>
+<span><span class="co">#&gt;  $ dimension   : int [1:2] 1440 720</span></span>
+<span><span class="co">#&gt;  $ dimXY       : int [1:2] 1440 720</span></span>
+<span><span class="co">#&gt;  $ minmax      : NULL</span></span>
+<span><span class="co">#&gt;  $ block       : int [1:2] 128 128</span></span>
+<span><span class="co">#&gt;  $ projection  : chr "GEOGCRS[\"WGS 84\",\n    DATUM[\"World Geodetic System 1984\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ bands       : int 1</span></span>
+<span><span class="co">#&gt;  $ projstring  : chr "+proj=longlat +datum=WGS84 +no_defs"</span></span>
+<span><span class="co">#&gt;  $ nodata_value: num -999</span></span>
+<span><span class="co">#&gt;  $ overviews   : NULL</span></span>
+<span><span class="co">#&gt;  $ filelist    : chr "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhr"| __truncated__</span></span>
+<span><span class="co">#&gt;  $ datatype    : chr "Int16"</span></span>
+<span><span class="co">#&gt;  $ extent      : num [1:4] 0 360 -90 90</span></span>
+<span><span class="co">#&gt;  $ subdatasets : NULL</span></span></code></pre></div>
+<p>Ok so finally we have a solid GDAL DSN that we can use. But, that whole process was expensive, I don’t want to do that for all 15000 of those NetCDF files, and I don’t want to store unwieldy VRT text either.</p>
+<p>So the dsn package has the following functions <code><a href="reference/prefix.html">vsicurl()</a></code>, <code><a href="reference/sds.html">sds()</a></code>, and <code><a href="reference/vrtcon.html">vrtcon()</a></code>.</p>
+<p>(<code><a href="reference/vrtcon.html">vrtcon()</a></code> is for <a href="https://gdal.org/drivers/raster/vrt.html#vrt-connection-string" class="external-link">VRT connection</a>, there are new features coming for that in GDAL 3.7).</p>
+<p>None of this requires GDAL or for any file or URL querying to be done at all. This is useful because <em>we already did it</em> many times over many years, and now we want to summarize our hard won knowledge in a simple augmented file or URL DSN.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">vsi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prefix.html">vsicurl</a></span><span class="op">(</span><span class="va">u</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sds.html">sds</a></span><span class="op">(</span><span class="va">vsi</span>, <span class="st">"sst"</span>, <span class="st">"NETCDF"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst"</span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">DSN</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/vrtcon.html">vrtcon</a></span><span class="op">(</span><span class="va">sds</span>, a_srs <span class="op">=</span> <span class="st">"OGC:CRS84"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "vrt://NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst?a_srs=OGC:CRS84"</span></span>
+<span></span>
+<span><span class="co">## and with that tiny bit of text we are also language independent</span></span>
+<span><span class="co">## (but my python installation is not up to scratch yet ...)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>

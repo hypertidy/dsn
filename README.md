@@ -15,7 +15,7 @@ handling.
 Please note that dsn is not doing anything *with GDAL*, this is pure
 string handling for things commonly used for GDAL:
 
-- prefixing `/viscurl/` to an online data source url for [GDAL’s Virtual
+- prefixing `/vsicurl/` to an online data source url for [GDAL’s Virtual
   File System](https://gdal.org/user/virtual_file_systems.html)
 - prefixing a driver declaration to a data source,
   e.g. `HDF5:/my/files/data.h5` or `NETCDF:C:/temp/nc/afile.nc`
@@ -84,8 +84,10 @@ Here is a less basic and real world example.
 These files have four variables and so need to be referenced using
 subdataset syntax. They are online so we need GDAL’s virtual file system
 [vsicurl](https://gdal.org/user/virtual_file_systems.html) to access it.
-Also, they are non-compliant NetCDF in that they don’t declare in a
-robust way what their coordinate reference system is (it’s longlat).
+Also, they are [non-compliant
+NetCDF](https://github.com/mdsumner/fixoisst) in that they don’t declare
+in a robust way what their coordinate reference system is (it’s
+longlat).
 
 (Even if you have the files locally you still need the subdataset and
 crs handling).

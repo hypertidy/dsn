@@ -159,9 +159,10 @@ NetCDF files, and I don’t want to store unwieldy VRT text either.
 So the dsn package has the following functions `vsicurl()`, `sds()`, and
 `vrtcon()`.
 
-(`vrtcon()` is for [VRT
-connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string),
-there are new features coming for that in GDAL 3.7).
+`vrtcon()` is for a [VRT
+connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string)
+string, a compact and dependency free sytax for augmenting GDAL data
+source names, there are new features coming for that in GDAL 3.7.
 
 None of this requires GDAL or for any file or URL querying to be done at
 all. This is useful because *we already did it* many times over many

@@ -14,10 +14,13 @@ prefixes and related string handling.
 Please note that dsn is not doing anything *with GDAL*, this is pure
 string handling for things commonly use for GDAL:
 
-- prepending ‘/viscurl/’ to an online data source url for [GDAL’s
-  Virtual File System](https://gdal.org/user/virtual_file_systems.html)
-- prepending a driver declaration to a data source,
+- prefixing’/viscurl/’ to an online data source url for [GDAL’s Virtual
+  File System](https://gdal.org/user/virtual_file_systems.html)
+- prefixing a driver declaration to a data source,
   e.g. “HDF5:/my/files/data.h5” or “NETCDF:C:/temp/nc/afile.nc”
+- wrapping a subdataset declaration,
+  e.g. “NETCDF:/myfiles/data.nc:variable”
+- wrapping a VRT connection, e.g. “vrt://myfile.tif?bands=3,2,1”
 
 Please see `vapour::vapour_vrt()` for actual use of GDAL to extend a
 data source name by opening the source and augmenting available
@@ -36,7 +39,7 @@ devtools::install_github("hypertidy/dsn")
 
 ## Example
 
-This is a basic example, add in the prefix for a vsicurl
+This is a basic example, add in the prefix for a vsicurl.
 
 ``` r
 library(dsn)
@@ -62,6 +65,143 @@ declaration, so we have a simple `driver()` wrapper for that.
 
 unprefix(nc)
 #> [1] "/u/user/somfile.nc"
+```
+
+## Real world example
+
+Here is a less basic and real world example.
+
+    https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc
+
+These files have four variables and so need to be referenced using
+subdataset syntax. They are online so we need GDAL’s virtual file system
+‘vsicurl’ to access it. Also, they are non-compliant NetCDF in that they
+don’t declare in a robust way what their coordinate reference system is
+(it’s longlat).
+
+(Even if you have the files locally you still need the subdataset and
+crs handling).
+
+So, we can find this stuff out with investigation. See there are
+subdatasets ‘sst’, ‘anom’, ‘err’, ‘ice’.
+
+``` r
+u <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"
+vapour::vapour_raster_info(file.path("/vsicurl", u))
+#> $geotransform
+#> [1] 0 1 0 0 0 1
+#> 
+#> $dimension
+#> [1] 512 512
+#> 
+#> $dimXY
+#> [1] 512 512
+#> 
+#> $minmax
+#> NULL
+#> 
+#> $block
+#> NULL
+#> 
+#> $projection
+#> NULL
+#> 
+#> $bands
+#> NULL
+#> 
+#> $projstring
+#> NULL
+#> 
+#> $nodata_value
+#> NULL
+#> 
+#> $overviews
+#> NULL
+#> 
+#> $filelist
+#> [1] "/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"
+#> 
+#> $datatype
+#> NULL
+#> 
+#> $extent
+#> [1]   0 512 512   0
+#> 
+#> $subdatasets
+#> [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst" 
+#> [2] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":anom"
+#> [3] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":err" 
+#> [4] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":ice"
+```
+
+And, with GDAL tools we can augment the missing metadata and get the
+subdatasets etc.
+
+Please note that the subdatasets might not always be in order, you
+really need to ask for them by name.
+
+``` r
+sds <- vapour::vapour_sds_names(file.path("/vsicurl", u))
+sds[1]
+#> [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst"
+```
+
+Finally, now we take that subdataset and augment it (this creates a GDAL
+open dataset in memory, and serializes it to in-memory VRT text).
+
+``` r
+vrt <- vapour::vapour_vrt(sds[1], projection = "OGC:CRS84")
+
+vrt
+#> [1] "<VRTDataset rasterXSize=\"1440\" rasterYSize=\"720\">\n  <SRS dataAxisToSRSAxisMapping=\"1,2\">GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Longitude\",EAST],AXIS[\"Latitude\",NORTH]]</SRS>\n  <GeoTransform>  0.0000000000000000e+00,  2.5000000000000000e-01,  0.0000000000000000e+00,  9.0000000000000000e+01,  0.0000000000000000e+00, -2.5000000000000000e-01</GeoTransform>\n  <Metadata>\n    <MDI key=\"lat#grids\">Uniform grid from -89.875 to 89.875 by 0.25</MDI>\n    <MDI key=\"lat#long_name\">Latitude</MDI>\n    <MDI key=\"lat#units\">degrees_north</MDI>\n    <MDI key=\"lon#grids\">Uniform grid from 0.125 to 359.875 by 0.25</MDI>\n    <MDI key=\"lon#long_name\">Longitude</MDI>\n    <MDI key=\"lon#units\">degrees_east</MDI>\n    <MDI key=\"NC_GLOBAL#cdm_data_type\">Grid</MDI>\n    <MDI key=\"NC_GLOBAL#comment\">Data was converted from NetCDF-3 to NetCDF-4 format with metadata updates in November 2017.</MDI>\n    <MDI key=\"NC_GLOBAL#Conventions\">CF-1.6, ACDD-1.3</MDI>\n    <MDI key=\"NC_GLOBAL#creator_email\">oisst-help@noaa.gov</MDI>\n    <MDI key=\"NC_GLOBAL#creator_url\">https://www.ncei.noaa.gov/</MDI>\n    <MDI key=\"NC_GLOBAL#date_created\">2021-10-15T09:12:00Z</MDI>\n    <MDI key=\"NC_GLOBAL#date_modified\">2021-10-15T09:12:00Z</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lat_max\">90</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lat_min\">-90</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lat_resolution\">0.25</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lat_units\">degrees_north</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lon_max\">360</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lon_min\">0</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lon_resolution\">0.25</MDI>\n    <MDI key=\"NC_GLOBAL#geospatial_lon_units\">degrees_east</MDI>\n    <MDI key=\"NC_GLOBAL#history\">Final file created using preliminary as first guess, and 3 days of AVHRR data. Preliminary uses only 1 day of AVHRR data.</MDI>\n    <MDI key=\"NC_GLOBAL#id\">oisst-avhrr-v02r01.20210930.nc</MDI>\n    <MDI key=\"NC_GLOBAL#institution\">NOAA/National Centers for Environmental Information</MDI>\n    <MDI key=\"NC_GLOBAL#instrument\">Earth Remote Sensing Instruments &gt; Passive Remote Sensing &gt; Spectrometers/Radiometers &gt; Imaging Spectrometers/Radiometers &gt; AVHRR &gt; Advanced Very High Resolution Radiometer</MDI>\n    <MDI key=\"NC_GLOBAL#instrument_vocabulary\">Global Change Master Directory (GCMD) Instrument Keywords</MDI>\n    <MDI key=\"NC_GLOBAL#keywords\">Earth Science &gt; Oceans &gt; Ocean Temperature &gt; Sea Surface Temperature</MDI>\n    <MDI key=\"NC_GLOBAL#keywords_vocabulary\">Global Change Master Directory (GCMD) Earth Science Keywords</MDI>\n    <MDI key=\"NC_GLOBAL#metadata_link\">https://doi.org/10.25921/RE9P-PT57</MDI>\n    <MDI key=\"NC_GLOBAL#naming_authority\">gov.noaa.ncei</MDI>\n    <MDI key=\"NC_GLOBAL#ncei_template_version\">NCEI_NetCDF_Grid_Template_v2.0</MDI>\n    <MDI key=\"NC_GLOBAL#platform\">Ships, buoys, Argo floats, MetOp-A, MetOp-B</MDI>\n    <MDI key=\"NC_GLOBAL#platform_vocabulary\">Global Change Master Directory (GCMD) Platform Keywords</MDI>\n    <MDI key=\"NC_GLOBAL#processing_level\">NOAA Level 4</MDI>\n    <MDI key=\"NC_GLOBAL#product_version\">Version v02r01</MDI>\n    <MDI key=\"NC_GLOBAL#references\">Reynolds, et al.(2007) Daily High-Resolution-Blended Analyses for Sea Surface Temperature (available at https://doi.org/10.1175/2007JCLI1824.1). Banzon, et al.(2016) A long-term record of blended satellite and in situ sea-surface temperature for climate monitoring, modeling and environmental studies (available at https://doi.org/10.5194/essd-8-165-2016). Huang et al. (2020) Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version v02r01, submitted.Climatology is based on 1971-2000 OI.v2 SST. Satellite data: Pathfinder AVHRR SST and Navy AVHRR SST. Ice data: NCEP Ice and GSFC Ice.</MDI>\n    <MDI key=\"NC_GLOBAL#sensor\">Thermometer, AVHRR</MDI>\n    <MDI key=\"NC_GLOBAL#source\">ICOADS, NCEP_GTS, GSFC_ICE, NCEP_ICE, Pathfinder_AVHRR, Navy_AVHRR</MDI>\n    <MDI key=\"NC_GLOBAL#standard_name_vocabulary\">CF Standard Name Table (v40, 25 January 2017)</MDI>\n    <MDI key=\"NC_GLOBAL#summary\">NOAAs 1/4-degree Daily Optimum Interpolation Sea Surface Temperature (OISST) (sometimes referred to as Reynolds SST, which however also refers to earlier products at different resolution), currently available as version v02r01, is created by interpolating and extrapolating SST observations from different sources, resulting in a smoothed complete field. The sources of data are satellite (AVHRR) and in situ platforms (i.e., ships and buoys), and the specific datasets employed may change over time. At the marginal ice zone, sea ice concentrations are used to generate proxy SSTs.  A preliminary version of this file is produced in near-real time (1-day latency), and then replaced with a final version after 2 weeks. Note that this is the AVHRR-ONLY DOISST, available from Oct 1981, but there is a companion DOISST product that includes microwave satellite data, available from June 2002</MDI>\n    <MDI key=\"NC_GLOBAL#time_coverage_end\">2021-09-30T23:59:59Z</MDI>\n    <MDI key=\"NC_GLOBAL#time_coverage_start\">2021-09-30T00:00:00Z</MDI>\n    <MDI key=\"NC_GLOBAL#title\">NOAA/NCEI 1/4 Degree Daily Optimum Interpolation Sea Surface Temperature (OISST) Analysis, Version 2.1 - Final</MDI>\n    <MDI key=\"NETCDF_DIM_EXTRA\">{time,zlev}</MDI>\n    <MDI key=\"NETCDF_DIM_time_DEF\">{1,5}</MDI>\n    <MDI key=\"NETCDF_DIM_time_VALUES\">15978</MDI>\n    <MDI key=\"NETCDF_DIM_zlev_DEF\">{1,5}</MDI>\n    <MDI key=\"NETCDF_DIM_zlev_VALUES\">0</MDI>\n    <MDI key=\"sst#add_offset\">0</MDI>\n    <MDI key=\"sst#long_name\">Daily sea surface temperature</MDI>\n    <MDI key=\"sst#scale_factor\">0.0099999998</MDI>\n    <MDI key=\"sst#units\">Celsius</MDI>\n    <MDI key=\"sst#valid_max\">4500</MDI>\n    <MDI key=\"sst#valid_min\">-300</MDI>\n    <MDI key=\"sst#_FillValue\">-999</MDI>\n    <MDI key=\"time#long_name\">Center time of the day</MDI>\n    <MDI key=\"time#units\">days since 1978-01-01 12:00:00</MDI>\n    <MDI key=\"zlev#actual_range\">0, 0</MDI>\n    <MDI key=\"zlev#long_name\">Sea surface height</MDI>\n    <MDI key=\"zlev#positive\">down</MDI>\n    <MDI key=\"zlev#units\">meters</MDI>\n  </Metadata>\n  <VRTRasterBand dataType=\"Int16\" band=\"1\">\n    <Metadata>\n      <MDI key=\"add_offset\">0</MDI>\n      <MDI key=\"long_name\">Daily sea surface temperature</MDI>\n      <MDI key=\"NETCDF_DIM_time\">15978</MDI>\n      <MDI key=\"NETCDF_DIM_zlev\">0</MDI>\n      <MDI key=\"NETCDF_VARNAME\">sst</MDI>\n      <MDI key=\"scale_factor\">0.0099999998</MDI>\n      <MDI key=\"units\">Celsius</MDI>\n      <MDI key=\"valid_max\">4500</MDI>\n      <MDI key=\"valid_min\">-300</MDI>\n      <MDI key=\"_FillValue\">-999</MDI>\n    </Metadata>\n    <NoDataValue>-999</NoDataValue>\n    <UnitType>Celsius</UnitType>\n    <Scale>0.009999999776482582</Scale>\n    <SimpleSource>\n      <SourceFilename relativeToVRT=\"0\">NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SourceProperties RasterXSize=\"1440\" RasterYSize=\"720\" DataType=\"Int16\" BlockXSize=\"1440\" BlockYSize=\"720\" />\n      <SrcRect xOff=\"0\" yOff=\"0\" xSize=\"1440\" ySize=\"720\" />\n      <DstRect xOff=\"0\" yOff=\"0\" xSize=\"1440\" ySize=\"720\" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n"
+
+str(vapour::vapour_raster_info(vrt))
+#> List of 14
+#>  $ geotransform: num [1:6] 0 0.25 0 90 0 -0.25
+#>  $ dimension   : int [1:2] 1440 720
+#>  $ dimXY       : int [1:2] 1440 720
+#>  $ minmax      : NULL
+#>  $ block       : int [1:2] 128 128
+#>  $ projection  : chr "GEOGCRS[\"WGS 84\",\n    DATUM[\"World Geodetic System 1984\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223"| __truncated__
+#>  $ bands       : int 1
+#>  $ projstring  : chr "+proj=longlat +datum=WGS84 +no_defs"
+#>  $ nodata_value: num -999
+#>  $ overviews   : NULL
+#>  $ filelist    : chr "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhr"| __truncated__
+#>  $ datatype    : chr "Int16"
+#>  $ extent      : num [1:4] 0 360 -90 90
+#>  $ subdatasets : NULL
+```
+
+Ok so finally we have a solid GDAL DSN that we can use. But, that whole
+process was expensive, I don’t want to do that for all 15000 of those
+NetCDF files, and I don’t want to store unwieldy VRT text either.
+
+So the dsn package has the following functions `vsicurl()`, `sds()`, and
+`vrtcon()`.
+
+(`vrtcon()` is for [VRT
+connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string),
+there are new features coming for that in GDAL 3.7).
+
+None of this requires GDAL or for any file or URL querying to be done at
+all. This is useful because *we already did it* many times over many
+years, and now we want to summarize our hard won knowledge in a simple
+augmented file or URL DSN.
+
+``` r
+library(dsn)
+(vsi <- vsicurl(u))
+#> [1] "/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"
+
+(sds <- sds(vsi, "sst", "NETCDF"))
+#> [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst"
+
+(DSN <- vrtcon(sds, a_srs = "OGC:CRS84"))
+#> [1] "vrt://NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst?a_srs=OGC:CRS84"
+
+## and with that tiny bit of text we are also language independent
+## (but my python installation is not up to scratch yet ...)
 ```
 
 ## Code of Conduct

@@ -23,8 +23,10 @@ The goal of dsn is to provide simple helpers for GDAL data source name prefixes 
 
 Please note that dsn is not doing anything *with GDAL*, this is pure string handling for things commonly use for GDAL: 
 
-- prepending '/viscurl/' to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
-- prepending a driver declaration to a data source, e.g. "HDF5:/my/files/data.h5" or "NETCDF:C:/temp/nc/afile.nc"
+- prefixing'/viscurl/' to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
+- prefixing a driver declaration to a data source, e.g. "HDF5:/my/files/data.h5" or "NETCDF:C:/temp/nc/afile.nc"
+- wrapping a subdataset declaration, e.g. "NETCDF:/myfiles/data.nc:variable"
+- wrapping a VRT connection, e.g. "vrt://myfile.tif?bands=3,2,1"
 
 Please see `vapour::vapour_vrt()` for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and will probably add helpers for the 'vrt://' connection syntax as well. 
 
@@ -39,7 +41,7 @@ devtools::install_github("hypertidy/dsn")
 
 ## Example
 
-This is a basic example, add in the prefix for a vsicurl
+This is a basic example, add in the prefix for a vsicurl. 
 
 ```{r example}
 library(dsn)
@@ -59,6 +61,66 @@ NetCDF is a very common source and occasionally requires explicit driver declara
 (nc <- netcdf("/u/user/somfile.nc"))
 
 unprefix(nc)
+```
+
+
+
+## Real world example
+
+Here is a less basic and real world example. 
+
+```
+https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc
+
+```
+These files have four variables and so need to be referenced using subdataset syntax.  They are online so we need GDAL's virtual file system 'vsicurl' to access it.  Also, they are non-compliant NetCDF in that they don't declare in a robust way what their coordinate reference system is (it's longlat). 
+
+(Even if you have the files locally you still need the subdataset and crs handling). 
+
+So, we can find this stuff out with investigation.  See there are subdatasets 'sst', 'anom', 'err', 'ice'. 
+
+```{r investigate}
+u <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"
+vapour::vapour_raster_info(file.path("/vsicurl", u))
+```
+
+And, with GDAL tools we can augment the missing metadata and get the subdatasets etc. 
+
+Please note that the subdatasets might not always be in order, you really need to ask for them by name. 
+```{r vapour_sds}
+sds <- vapour::vapour_sds_names(file.path("/vsicurl", u))
+sds[1]
+```
+
+Finally, now we take that subdataset and augment it (this creates a GDAL open dataset in memory, and serializes it to in-memory VRT text). 
+
+```{r vapour_vrt}
+vrt <- vapour::vapour_vrt(sds[1], projection = "OGC:CRS84")
+
+vrt
+
+str(vapour::vapour_raster_info(vrt))
+```
+
+Ok so finally we have a solid GDAL DSN that we can use. But, that whole process was expensive, I don't want to do that for all 15000 of those NetCDF files, and I don't want to store unwieldy VRT text either. 
+
+So the dsn package has the following functions `vsicurl()`, `sds()`, and `vrtcon()`. 
+
+(`vrtcon()` is for [VRT connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string), there are new features coming for that in GDAL 3.7). 
+
+None of this requires GDAL or for any file or URL querying to be done at all. This is useful because *we already did it* many times over many years, and now we want to summarize our hard won knowledge in a simple augmented file or URL DSN. 
+
+```{r vrtcon}
+library(dsn)
+(vsi <- vsicurl(u))
+
+(sds <- sds(vsi, "sst", "NETCDF"))
+
+(DSN <- vrtcon(sds, a_srs = "OGC:CRS84"))
+
+## and with that tiny bit of text we are also language independent
+## (but my python installation is not up to scratch yet ...)
+
 ```
 
 ## Code of Conduct

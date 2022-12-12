@@ -2,6 +2,8 @@
 
 export(driver)
 export(netcdf)
+export(sds)
 export(unprefix)
 export(unvsicurl)
+export(vrtcon)
 export(vsicurl)

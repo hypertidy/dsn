@@ -172,7 +172,7 @@
 <span><span class="co">#&gt;  $ subdatasets : NULL</span></span></code></pre></div>
 <p>Ok so finally we have a solid GDAL DSN that we can use. But, that whole process was expensive, I don’t want to do that for all 15000 of those NetCDF files, and I don’t want to store unwieldy VRT text either.</p>
 <p>So the dsn package has the following functions <code><a href="reference/prefix.html">vsicurl()</a></code>, <code><a href="reference/sds.html">sds()</a></code>, and <code><a href="reference/vrtcon.html">vrtcon()</a></code>.</p>
-<p>(<code><a href="reference/vrtcon.html">vrtcon()</a></code> is for <a href="https://gdal.org/drivers/raster/vrt.html#vrt-connection-string" class="external-link">VRT connection</a>, there are new features coming for that in GDAL 3.7).</p>
+<p><code><a href="reference/vrtcon.html">vrtcon()</a></code> is for a <a href="https://gdal.org/drivers/raster/vrt.html#vrt-connection-string" class="external-link">VRT connection</a> string, a compact and dependency free sytax for augmenting GDAL data source names, there are new features coming for that in GDAL 3.7.</p>
 <p>None of this requires GDAL or for any file or URL querying to be done at all. This is useful because <em>we already did it</em> many times over many years, and now we want to summarize our hard won knowledge in a simple augmented file or URL DSN.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>

@@ -73,7 +73,7 @@
 <p>The goal of dsn is to provide simple helpers for <a href="https://gdal.org/" class="external-link">GDAL</a> data source name prefixes and related string handling.</p>
 <p>Please note that dsn is not doing anything <em>with GDAL</em>, this is pure string handling for things commonly used for GDAL:</p>
 <ul>
-<li>prefixing <code>/viscurl/</code> to an online data source url for <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">GDAL’s Virtual File System</a>
+<li>prefixing <code>/vsicurl/</code> to an online data source url for <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">GDAL’s Virtual File System</a>
 </li>
 <li>prefixing a driver declaration to a data source, e.g. <code>HDF5:/my/files/data.h5</code> or <code>NETCDF:C:/temp/nc/afile.nc</code>
 </li>
@@ -120,7 +120,7 @@
 </h2>
 <p>Here is a less basic and real world example.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
-<p>These files have four variables and so need to be referenced using subdataset syntax. They are online so we need GDAL’s virtual file system <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">vsicurl</a> to access it. Also, they are non-compliant NetCDF in that they don’t declare in a robust way what their coordinate reference system is (it’s longlat).</p>
+<p>These files have four variables and so need to be referenced using subdataset syntax. They are online so we need GDAL’s virtual file system <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">vsicurl</a> to access it. Also, they are <a href="https://github.com/mdsumner/fixoisst" class="external-link">non-compliant NetCDF</a> in that they don’t declare in a robust way what their coordinate reference system is (it’s longlat).</p>
 <p>(Even if you have the files locally you still need the subdataset and crs handling).</p>
 <p>So, we can find this stuff out with investigation. See there are subdatasets <code>sst</code>, <code>anom</code>, <code>err</code>, <code>ice</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

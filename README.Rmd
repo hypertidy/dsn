@@ -19,16 +19,16 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/hypertidy/dsn/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hypertidy/dsn/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of dsn is to provide simple helpers for GDAL data source name prefixes and related string handling. 
+The goal of dsn is to provide simple helpers for [GDAL](https://gdal.org/) data source name prefixes and related string handling. 
 
-Please note that dsn is not doing anything *with GDAL*, this is pure string handling for things commonly use for GDAL: 
+Please note that dsn is not doing anything *with GDAL*, this is pure string handling for things commonly used for GDAL: 
 
-- prefixing'/viscurl/' to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
-- prefixing a driver declaration to a data source, e.g. "HDF5:/my/files/data.h5" or "NETCDF:C:/temp/nc/afile.nc"
-- wrapping a subdataset declaration, e.g. "NETCDF:/myfiles/data.nc:variable"
-- wrapping a VRT connection, e.g. "vrt://myfile.tif?bands=3,2,1"
+- prefixing `/viscurl/` to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
+- prefixing a driver declaration to a data source, e.g. `HDF5:/my/files/data.h5` or `NETCDF:C:/temp/nc/afile.nc`
+- wrapping a [subdataset](https://gdal.org/user/raster_data_model.html#subdatasets-domain)  declaration, e.g. `NETCDF:/myfiles/data.nc:variable` that can occur in [NETCDF](https://gdal.org/drivers/raster/netcdf.html#multiple-image-handling-subdatasets) and similar formats
+- wrapping a [VRT connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string), e.g. `vrt://myfile.tif?bands=3,2,1`
 
-Please see `vapour::vapour_vrt()` for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and will probably add helpers for the 'vrt://' connection syntax as well. 
+Please see [vapour::vapour_vrt()](https://hypertidy.github.io/vapour/reference/vapour_vrt.html) for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and in general intends to be purely string handling, and not make use of the format libraries at all. 
 
 ## Installation
 
@@ -73,15 +73,15 @@ Here is a less basic and real world example.
 https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc
 
 ```
-These files have four variables and so need to be referenced using subdataset syntax.  They are online so we need GDAL's virtual file system 'vsicurl' to access it.  Also, they are non-compliant NetCDF in that they don't declare in a robust way what their coordinate reference system is (it's longlat). 
+These files have four variables and so need to be referenced using subdataset syntax.  They are online so we need GDAL's virtual file system [vsicurl](https://gdal.org/user/virtual_file_systems.html) to access it.  Also, they are non-compliant NetCDF in that they don't declare in a robust way what their coordinate reference system is (it's longlat). 
 
 (Even if you have the files locally you still need the subdataset and crs handling). 
 
-So, we can find this stuff out with investigation.  See there are subdatasets 'sst', 'anom', 'err', 'ice'. 
+So, we can find this stuff out with investigation.  See there are subdatasets `sst`, `anom`, `err`, `ice`. 
 
 ```{r investigate}
 u <- "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"
-vapour::vapour_raster_info(file.path("/vsicurl", u))
+str(vapour::vapour_raster_info(file.path("/vsicurl", u)))
 ```
 
 And, with GDAL tools we can augment the missing metadata and get the subdatasets etc. 
@@ -89,13 +89,13 @@ And, with GDAL tools we can augment the missing metadata and get the subdatasets
 Please note that the subdatasets might not always be in order, you really need to ask for them by name. 
 ```{r vapour_sds}
 sds <- vapour::vapour_sds_names(file.path("/vsicurl", u))
-sds[1]
+(sst0 <- grep(":sst$", sds, value = TRUE))
 ```
 
 Finally, now we take that subdataset and augment it (this creates a GDAL open dataset in memory, and serializes it to in-memory VRT text). 
 
 ```{r vapour_vrt}
-vrt <- vapour::vapour_vrt(sds[1], projection = "OGC:CRS84")
+vrt <- vapour::vapour_vrt(sst0, projection = "OGC:CRS84")
 
 vrt
 
@@ -120,6 +120,48 @@ library(dsn)
 
 ## and with that tiny bit of text we are also language independent
 ## (but my python installation is not up to scratch yet ...)
+
+```
+
+Here is a gdalinfo output just to prove it works (requires GDAL 3.7 for the `vrt://...?a_srs` syntax). 
+
+
+```
+gdalinfo "vrt://NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst?a_srs=OGC:CRS84" -nomd
+Driver: VRT/Virtual Raster
+Files: NETCDF:"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc":sst
+Size is 1440, 720
+Coordinate System is:
+GEOGCRS["WGS 84",
+    DATUM["World Geodetic System 1984",
+        ELLIPSOID["WGS 84",6378137,298.257223563,
+            LENGTHUNIT["metre",1]],
+        ID["EPSG",6326]],
+    PRIMEM["Greenwich",0,
+        ANGLEUNIT["degree",0.0174532925199433],
+        ID["EPSG",8901]],
+    CS[ellipsoidal,2],
+        AXIS["longitude",east,
+            ORDER[1],
+            ANGLEUNIT["degree",0.0174532925199433,
+                ID["EPSG",9122]]],
+        AXIS["latitude",north,
+            ORDER[2],
+            ANGLEUNIT["degree",0.0174532925199433,
+                ID["EPSG",9122]]]]
+Data axis to CRS axis mapping: 1,2
+Origin = (0.000000000000000,90.000000000000000)
+Pixel Size = (0.250000000000000,-0.250000000000000)
+Corner Coordinates:
+Upper Left  (   0.0000000,  90.0000000) (  0d 0' 0.01"E, 90d 0' 0.00"N)
+Lower Left  (   0.0000000, -90.0000000) (  0d 0' 0.01"E, 90d 0' 0.00"S)
+Upper Right (     360.000,      90.000) (360d 0' 0.00"E, 90d 0' 0.00"N)
+Lower Right (     360.000,     -90.000) (360d 0' 0.00"E, 90d 0' 0.00"S)
+Center      ( 180.0000000,   0.0000000) (180d 0' 0.00"E,  0d 0' 0.01"N)
+Band 1 Block=1440x720 Type=Int16, ColorInterp=Undefined
+  NoData Value=-999
+  Unit Type: Celsius
+  Offset: 0,   Scale:0.00999999977648258
 
 ```
 

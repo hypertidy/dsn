@@ -5,6 +5,7 @@
 #' @param x character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)
 #' @param varname named of variable in DSN
 #' @param driver driver to use, e.g. "NETCDF", "HDF5"
+#' @param quote wrap the core dsn in escaped double quotes, or not
 #'
 #' @return character string of the form "DRIVER:%s:varname"
 #' @export
@@ -27,6 +28,9 @@ sds <- function(x, varname, driver, quote = TRUE) {
 #'
 #' As of writing (GDAL 3.7.0DEV 2022-12-12) the only available named arguments
 #' are 'a_srs', 'bands', 'a_ullr' but that doesn't stop this function.
+#'
+#' @param  x character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)
+#' @param ... named arguments like 'a_srs="OGC:CRS84"
 #'
 #' @export
 #'

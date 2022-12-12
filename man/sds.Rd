@@ -12,6 +12,8 @@ sds(x, varname, driver, quote = TRUE)
 \item{varname}{named of variable in DSN}
 
 \item{driver}{driver to use, e.g. "NETCDF", "HDF5"}
+
+\item{quote}{wrap the core dsn in escaped double quotes, or not}
 }
 \value{
 character string of the form "DRIVER:\%s:varname"

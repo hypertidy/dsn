@@ -6,6 +6,11 @@
 \usage{
 vrtcon(x, ...)
 }
+\arguments{
+\item{x}{character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)}
+
+\item{...}{named arguments like 'a_srs="OGC:CRS84"}
+}
 \value{
 character string in the form "vrt://\%s?arg1&arg2"
 }

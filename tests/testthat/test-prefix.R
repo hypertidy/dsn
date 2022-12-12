@@ -9,6 +9,7 @@ test_that("prefix works", {
   expect_equal(driver(vsicurl(ncurl)), "/vsicurl/https://netcdf-r-us.org/f.nc")
   expect_equal(driver(vsicurl(ncurl), "GMT"), "GMT:/vsicurl/https://netcdf-r-us.org/f.nc")
 
+  expect_equal(netcdf("/viscurl/https://netcdf.rules"), "NETCDF:/viscurl/https://netcdf.rules")
   expect_equal(driver("C:/some/files/a.grd", "NETCDF"), "NETCDF:C:/some/files/a.grd")
 })
 

@@ -21,7 +21,8 @@ An array in memory can be referenced by a GDAL data source.
 This DSN will only work in R, and is only for use with GDAL read and query tools (so terra, sf, gdalcubes, vapour, etc.).
 }
 \examples{
-m <- matrix(c(0, 0, 0, 1), 5L, 4L)
+m <- matrix(as.integer(c(0L, 0, 0, 1)), 5L, 4L)
 mem(m)
 mem(volcano)
+
 }

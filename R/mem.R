@@ -24,28 +24,30 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #' @export
 #'
 #' @examples
-#' m <- matrix(c(0, 0, 0, 1), 5L, 4L)
+#' m <- matrix(as.integer(c(0L, 0, 0, 1)), 5L, 4L)
 #' mem(m)
 #' mem(volcano)
 #'
 mem <- function(x, extent = NULL, bandoff = 0) {
+  ## can't get Byte or Int32 to work
+  type <- "Float64"
   x <- x * 1.0  ## make sure it's double haha
-#print(typeof(x))
+
   dimension <- dim(x)
   if (is.null(extent)) extent <- c(0, dimension[1L], 0, dimension[2L])
   d3 <- 1
   if (length(dimension) > 2L) d3 <- dimension[3L]
-  type <- "Float64"
-  # switch(typeof(x),
-  #                integer = "Int32",
-  #                double = "Float64",
-  #                raw = "Byte")
-  gt <- ext_dim(extent, dimension)
-  addr <- as.double(pryr::address(x)) + 48
 
-out <- sprintf(
+
+  # type <-  switch(typeof(x),
+  #                 integer = "Int32",
+  #                double = "Float64",
+  #                 raw = "Byte")
+  offset <- c(Int32 = 4, Float64 = 8, Byte = 1)[type]
+  gt <- ext_dim(extent, dimension)
+  addr <- as.double(pryr::address(x)) + 6 * offset
+
+sprintf(
   "MEM:::DATAPOINTER=\"%s\",PIXELS=%i,LINES=%i,BANDS=%i,DATATYPE=%s,GEOTRANSFORM=%s,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=1",
    addr, dimension[1L], dimension[2L], d3, type, paste(gt, collapse = "/"))
-#print(out)
-out
 }

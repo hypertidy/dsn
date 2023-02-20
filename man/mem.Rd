@@ -4,12 +4,14 @@
 \alias{mem}
 \title{Generate a data source name (DSN) for the GDAL MEM driver}
 \usage{
-mem(x, extent = NULL, bandoff = 0)
+mem(x, extent = NULL, projection = "")
 }
 \arguments{
 \item{x}{an R array, must be of numeric type (integer is converted to double)}
 
 \item{extent}{optional extent of the data in x,y c(xmin, xmax, ymin, ymax)}
+
+\item{projection}{projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)}
 }
 \value{
 character string, a DSN for use by GDAL

@@ -1,0 +1,93 @@
+#' Imagery online sources
+#' 
+#' Raster and imagery online
+#' 
+#' @name dsn-sources
+#' @export
+wms_arcgis_mapserver_ESRI.WorldImagery_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>17</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><MaxConnections>10</MaxConnections><Cache /></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_bluemarble_s3_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>http://s3.amazonaws.com/com.modestmaps.bluemarble/${z}-r${y}-c${x}.jpg</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>9</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><Cache/></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_googlehybrid_tms <- function()"<GDAL_WMS><!-- Data is subject to term of use detailed at http://code.google.com/intl/nl/apis/maps/terms.html andhttp://www.google.com/intl/en_ALL/help/terms_maps.html --><Service name=\"TMS\"><!-- ServerUrl>http://mt.google.com/vt/lyrs=m&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --><!-- Map --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=s&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Satellite --><ServerUrl>http://mt.google.com/vt/lyrs=y&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> <!-- Hybrid --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=t&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Terrain --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=p&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Terrain, Streets and Water  --></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>20</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><MaxConnections>5</MaxConnections><Cache /></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_virtualearth <- function()"<GDAL_WMS><Service name=\"VirtualEarth\"><ServerUrl>http://a${server_num}.ortho.tiles.virtualearth.net/tiles/a${quadkey}.jpeg?g=90</ServerUrl></Service><MaxConnections>4</MaxConnections><Cache/></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_ESA_worldcover_2020_tms <- function()"<GDAL_WMS><Service name=\"WMS\"><Version>1.1.1</Version><ServerUrl>https://services.terrascope.be/wms/v2?SERVICE=WMS</ServerUrl><Layers>WORLDCOVER_2020_MAP</Layers><SRS>EPSG:3857</SRS><ImageFormat>image/jpeg</ImageFormat><Transparent>FALSE</Transparent><BBoxOrder>xyXY</BBoxOrder></Service><DataWindow><UpperLeftX>-2.003750834E7</UpperLeftX><UpperLeftY>2.003750834E7</UpperLeftY><LowerRightX>2.003750834E7</LowerRightX><LowerRightY>-2.003750834E7</LowerRightY><SizeX>1073741824</SizeX><SizeY>1073741824</SizeY></DataWindow><BandsCount>3</BandsCount><BlockSizeX>1024</BlockSizeX><BlockSizeY>1024</BlockSizeY><OverviewCount>20</OverviewCount></GDAL_WMS>" 
+#' @name dsn-sources
+#' @export
+wms_mapbox_satellite <- function()"<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://api.mapbox.com/v4/mapbox.satellite/${z}/${x}/${y}.jpg?access_token=%s</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>22</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /><ZeroBlockHttpCodes>204,404,401</ZeroBlockHttpCodes><ZeroBlockOnServerException>true</ZeroBlockOnServerException></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_amazon_elevation <- function() "<GDAL_WMS>\n    <Service name=\"TMS\">\n        <ServerUrl>https://s3.amazonaws.com/elevation-tiles-prod/geotiff/${z}/${x}/${y}.tif</ServerUrl>\n    </Service>\n    <DataWindow>\n        <UpperLeftX>-20037508.340000</UpperLeftX>\n        <UpperLeftY>20037508.340000</UpperLeftY>\n        <LowerRightX>20037508.340000</LowerRightX>\n        <LowerRightY>-20037508.340000</LowerRightY>\n        <TileLevel>15</TileLevel>\n        <TileCountX>1</TileCountX>\n        <TileCountY>1</TileCountY>\n        <YOrigin>top</YOrigin>\n    </DataWindow>\n    <Projection>EPSG:3857</Projection>\n    <BlockSizeX>256</BlockSizeX>\n    <BlockSizeY>256</BlockSizeY>\n    <BandsCount>3</BandsCount>\n    <UserAgent>RStudio Server (2022.7.0.548); R (4.2.1 x86_64-pc-linux-gnu x86_64 linux-gnu)</UserAgent>\n</GDAL_WMS>"
+
+
+#' @name dsn-sources
+#' @export
+wms_mapbox_terrain <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://api.mapbox.com/v4/mapbox.terrain-rgb/${z}/${x}/${y}@2x.png?access_token=%s</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>15</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>512</BlockSizeX><BlockSizeY>512</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /></GDAL_WMS>"  
+#' @name dsn-sources
+#' @export
+wms_openstreetmap_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://tile.openstreetmap.org/${z}/${x}/${y}.png</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>18</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_googleterrainstreets_tms <- function() "<GDAL_WMS><!-- Data is subject to term of use detailed at http://code.google.com/intl/nl/apis/maps/terms.html andhttp://www.google.com/intl/en_ALL/help/terms_maps.html --><Service name=\"TMS\"><!-- <ServerUrl>http://mt.google.com/vt/lyrs=m&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --><!-- Map --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=s&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Satellite --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=y&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Hybrid --><!-- <ServerUrl>http://mt.google.com/vt/lyrs=t&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> --> <!-- Terrain --><ServerUrl>http://mt.google.com/vt/lyrs=p&amp;x=${x}&amp;y=${y}&amp;z=${z}</ServerUrl> <!-- Terrain, Streets and Water  --></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>20</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><MaxConnections>5</MaxConnections><Cache /><ZeroBlockHttpCodes>204,404,401</ZeroBlockHttpCodes><ZeroBlockOnServerException>true</ZeroBlockOnServerException></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_virtualearth_street <- function() "<GDAL_WMS><Service name=\"VirtualEarth\"><ServerUrl>http://r${server_num}.ortho.tiles.virtualearth.net/tiles/r${quadkey}.jpeg?g=90</ServerUrl></Service><MaxConnections>4</MaxConnections><Cache/></GDAL_WMS>"
+#' @name dsn-sources
+#' @export
+wms_arcgis_mapserver_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>17</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><MaxConnections>10</MaxConnections><Cache /></GDAL_WMS>"
+
+#' @name dsn-sources
+#' @export
+cop90 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP90/COP90_hh.vrt"
+#' @name dsn-sources
+#' @export
+cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/COP30_hh.vrt" 
+
+#' GEBCO source dsn
+#' 
+#' A data source name to the GEBCO  elevation 'COG' GeoTIFF. 
+#'
+#' GEBCO 2022 is created and hosted by Philippe Massicotte. 
+#' 
+#' GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division. 
+#' 
+#' @param vsi include the 'vsicurl' prefix (`TRUE` is default)
+#'
+#' @returns character string, URL to online GeoTIFF
+#' @export
+#'
+#' @aliases gebco22 gebco21 gebco19
+#' @examples
+#' gebco()
+gebco <- function(vsi = TRUE) {
+  gebco22(vsi = vsi)
+}
+
+#' @name gebco
+#' @export
+gebco21 <- function(vsi = TRUE) {
+  url <- "https://public.services.aad.gov.au/datasets/science/GEBCO_2021_GEOTIFF/GEBCO_2021.tif"
+  if (vsi) url <- file.path("/vsicurl", url)
+  url
+}
+
+#' @name gebco
+#' @export
+gebco22 <- function(vsi = TRUE) {
+  url <- "https://gebco2022.s3.valeria.science/gebco_2022_complete_cog.tif"
+  if (vsi) url <- file.path("/vsicurl", url)
+  url
+}
+
+#' @name gebco
+#' @export
+gebco19 <- function(vsi = TRUE) {
+  url <- "https://public.services.aad.gov.au/datasets/science/GEBCO_2019_GEOTIFF/GEBCO_2019.tif"
+  if (vsi) url <- file.path("/vsicurl", url)
+  url
+} 

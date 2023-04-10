@@ -1,7 +1,7 @@
 #' Imagery online sources
-#' 
+#'
 #' Raster and imagery online
-#' 
+#'
 #' @name dsn-sources
 #' @export
 wms_arcgis_mapserver_ESRI.WorldImagery_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>17</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:900913</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><MaxConnections>10</MaxConnections><Cache /></GDAL_WMS>"
@@ -16,7 +16,7 @@ wms_googlehybrid_tms <- function()"<GDAL_WMS><!-- Data is subject to term of use
 wms_virtualearth <- function()"<GDAL_WMS><Service name=\"VirtualEarth\"><ServerUrl>http://a${server_num}.ortho.tiles.virtualearth.net/tiles/a${quadkey}.jpeg?g=90</ServerUrl></Service><MaxConnections>4</MaxConnections><Cache/></GDAL_WMS>"
 #' @name dsn-sources
 #' @export
-wms_ESA_worldcover_2020_tms <- function()"<GDAL_WMS><Service name=\"WMS\"><Version>1.1.1</Version><ServerUrl>https://services.terrascope.be/wms/v2?SERVICE=WMS</ServerUrl><Layers>WORLDCOVER_2020_MAP</Layers><SRS>EPSG:3857</SRS><ImageFormat>image/jpeg</ImageFormat><Transparent>FALSE</Transparent><BBoxOrder>xyXY</BBoxOrder></Service><DataWindow><UpperLeftX>-2.003750834E7</UpperLeftX><UpperLeftY>2.003750834E7</UpperLeftY><LowerRightX>2.003750834E7</LowerRightX><LowerRightY>-2.003750834E7</LowerRightY><SizeX>1073741824</SizeX><SizeY>1073741824</SizeY></DataWindow><BandsCount>3</BandsCount><BlockSizeX>1024</BlockSizeX><BlockSizeY>1024</BlockSizeY><OverviewCount>20</OverviewCount></GDAL_WMS>" 
+wms_ESA_worldcover_2020_tms <- function()"<GDAL_WMS><Service name=\"WMS\"><Version>1.1.1</Version><ServerUrl>https://services.terrascope.be/wms/v2?SERVICE=WMS</ServerUrl><Layers>WORLDCOVER_2020_MAP</Layers><SRS>EPSG:3857</SRS><ImageFormat>image/jpeg</ImageFormat><Transparent>FALSE</Transparent><BBoxOrder>xyXY</BBoxOrder></Service><DataWindow><UpperLeftX>-2.003750834E7</UpperLeftX><UpperLeftY>2.003750834E7</UpperLeftY><LowerRightX>2.003750834E7</LowerRightX><LowerRightY>-2.003750834E7</LowerRightY><SizeX>1073741824</SizeX><SizeY>1073741824</SizeY></DataWindow><BandsCount>3</BandsCount><BlockSizeX>1024</BlockSizeX><BlockSizeY>1024</BlockSizeY><OverviewCount>20</OverviewCount></GDAL_WMS>"
 #' @name dsn-sources
 #' @export
 wms_mapbox_satellite <- function()"<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://api.mapbox.com/v4/mapbox.satellite/${z}/${x}/${y}.jpg?access_token=%s</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>22</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /><ZeroBlockHttpCodes>204,404,401</ZeroBlockHttpCodes><ZeroBlockOnServerException>true</ZeroBlockOnServerException></GDAL_WMS>"
@@ -27,7 +27,7 @@ wms_amazon_elevation <- function() "<GDAL_WMS>\n    <Service name=\"TMS\">\n    
 
 #' @name dsn-sources
 #' @export
-wms_mapbox_terrain <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://api.mapbox.com/v4/mapbox.terrain-rgb/${z}/${x}/${y}@2x.png?access_token=%s</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>15</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>512</BlockSizeX><BlockSizeY>512</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /></GDAL_WMS>"  
+wms_mapbox_terrain <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://api.mapbox.com/v4/mapbox.terrain-rgb/${z}/${x}/${y}@2x.png?access_token=%s</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>15</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>512</BlockSizeX><BlockSizeY>512</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /></GDAL_WMS>"
 #' @name dsn-sources
 #' @export
 wms_openstreetmap_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerUrl>https://tile.openstreetmap.org/${z}/${x}/${y}.png</ServerUrl></Service><DataWindow><UpperLeftX>-20037508.34</UpperLeftX><UpperLeftY>20037508.34</UpperLeftY><LowerRightX>20037508.34</LowerRightX><LowerRightY>-20037508.34</LowerRightY><TileLevel>18</TileLevel><TileCountX>1</TileCountX><TileCountY>1</TileCountY><YOrigin>top</YOrigin></DataWindow><Projection>EPSG:3857</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><!--<UserAgent>Please add a specific user agent text, to avoid the default one being used, and potentially blocked by OSM servers in case a too big usage of it would be seen</UserAgent>--><Cache /></GDAL_WMS>"
@@ -46,16 +46,16 @@ wms_arcgis_mapserver_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerU
 cop90 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP90/COP90_hh.vrt"
 #' @name dsn-sources
 #' @export
-cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/COP30_hh.vrt" 
+cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/COP30_hh.vrt"
 
 #' GEBCO source dsn
-#' 
-#' A data source name to the GEBCO  elevation 'COG' GeoTIFF. 
 #'
-#' GEBCO 2022 is created and hosted by Philippe Massicotte. 
-#' 
-#' GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division. 
-#' 
+#' A data source name to the GEBCO  elevation 'COG' GeoTIFF.
+#'
+#' GEBCO 2022 is created and hosted by Philippe Massicotte.
+#'
+#' GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division.
+#'
 #' @param vsi include the 'vsicurl' prefix (`TRUE` is default)
 #'
 #' @returns character string, URL to online GeoTIFF
@@ -90,4 +90,35 @@ gebco19 <- function(vsi = TRUE) {
   url <- "https://public.services.aad.gov.au/datasets/science/GEBCO_2019_GEOTIFF/GEBCO_2019.tif"
   if (vsi) url <- file.path("/vsicurl", url)
   url
-} 
+}
+
+#' the geoBoundaries countries
+#'
+#' @export
+#' @name CGAZ
+#' @aliases CGAZ_sql
+CGAZ <- function() "/vsizip//vsicurl/https://github.com/wmgeolab/geoBoundaries/raw/main/releaseData/CGAZ/geoBoundariesCGAZ_ADM0.zip"
+
+#' @export
+#' @name CGAZ
+#' @examples
+#' CGAZ_sql(c("Australia", "New Zealand"))
+#' CGAZ_sql(c("AUS", "NZL"))
+#' ## do something like gdal_raster_data(gebco(), target_res = 1, options = c("-crop_to_cutline", "-cutline", CGAZ(), "-csql", CGAZ_sql(c("Australia", "New Zealand")) ))
+CGAZ_sql <- function(codes) {
+    #if (missing(codes)) stop("set codes to one or more iso3c country codes or their _names_, or to 'NULL' to get all")
+    dsn <- CGAZ()
+    #where <- c("Australia", "New Zealand", "Antarctica")[1]
+    layer <- "geoBoundariesCGAZ_ADM0" ##vapour::vapour_layer_names(dsn)[1L]
+
+      if (any(!nchar(codes) == 3L)) {
+        codes <- countrycode::countrycode(codes, "country.name", "iso3c")
+      }
+
+      csql <- sprintf("SELECT shapeGroup FROM %s WHERE shapeGroup IN (%s)", layer,  paste(paste0("'", codes, "'"), collapse = ","))
+
+#g <- vapour::vapour_read_geometry(dsn, sql = csql)
+#geb <- "/vsicurl/https://public.services.aad.gov.au/datasets/science/GEBCO_2021_GEOTIFF/GEBCO_2021.tif"
+#vapour::gdal_raster_data(geb, target_dim = c(100, 100), options = c("-cutline", dsn, "-csql", csql, "-crop_to_cutline"))
+csql
+}

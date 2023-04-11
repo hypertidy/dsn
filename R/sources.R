@@ -122,3 +122,37 @@ CGAZ_sql <- function(codes) {
 #vapour::gdal_raster_data(geb, target_dim = c(100, 100), options = c("-cutline", dsn, "-csql", csql, "-crop_to_cutline"))
 csql
 }
+
+
+
+#' MURSST (GHRSST) sst Zarr source
+#'
+#' Don't trust this, I don't know if it's really daily like the NetCDF files are. GDAL should have the time metadata in the 2D interface but does not.
+#' It seems like this source doesn't go past "2020-01-21" or band 6443, don't know why that is.
+#'
+#' @param band a band number (defaults to 0, which is 2002-06-01)
+#'
+#' @return a string, a dsn for Zarr MURSST
+#' @export
+#'
+#' @examples
+#' mursst()
+#' mursst_time("2019-10-08")
+mursst <- function(band = 0) {
+  sprintf("ZARR:\"/vsis3/mur-sst/zarr\":/analysed_sst:%i", band)
+}
+
+mursst_time <- function(time = NULL) {
+  Sys.setenv("AWS_NO_SIGN_REQUEST"="yes")
+  epoch <- as.Date("2002-06-01")
+  if (!is.null(time)) {
+    time <- as.Date(as.POSIXct(time))
+  } else {
+    time <- epoch
+  }
+  ## basically days since
+  band <- as.Date(time) - epoch
+  if (band < 0) stop("time is before the beginning")
+  if (time > (Sys.Date()-5)) message("time is only 5 days ago or in the future")
+  mursst(band)
+}

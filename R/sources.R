@@ -103,12 +103,18 @@ gebco19 <- function(vsi = TRUE) {
 #' @aliases CGAZ_sql
 CGAZ <- function() "/vsizip//vsicurl/https://github.com/wmgeolab/geoBoundaries/raw/main/releaseData/CGAZ/geoBoundariesCGAZ_ADM0.zip"
 
+#' @param codes a list of iso3 country codes, or country names (this is a bit sketchy)
+#'
 #' @export
+#' @importFrom countrycode countrycode
 #' @name CGAZ
 #' @examples
 #' CGAZ_sql(c("Australia", "New Zealand"))
 #' CGAZ_sql(c("AUS", "NZL"))
-#' ## do something like gdal_raster_data(gebco(), target_res = 1, options = c("-crop_to_cutline", "-cutline", CGAZ(), "-csql", CGAZ_sql(c("Australia", "New Zealand")) ))
+#' ## do something like gdal_raster_data(gebco(), target_res = 1,
+#' ##                                        options = c("-crop_to_cutline",
+#' ##                                        "-cutline", CGAZ(),
+#' ##                                         "-csql", CGAZ_sql(c("Australia", "New Zealand")) ))
 CGAZ_sql <- function(codes) {
     #if (missing(codes)) stop("set codes to one or more iso3c country codes or their _names_, or to 'NULL' to get all")
     dsn <- CGAZ()
@@ -131,8 +137,13 @@ csql
 
 #' MURSST (GHRSST) sst Zarr source
 #'
-#' Don't trust this, I don't know if it's really daily like the NetCDF files are. GDAL should have the time metadata in the 2D interface but does not.
+#' This is used a lot of noisy fanfare about why everyone must move to Zarr in
+#' the cloud. It's really big, daily netcdf blended/observation/model data on a
+#' 36000x18000 grid, a regular grid in -180, 180, -90, 90.
+#'
+#'
 #' It seems like this source doesn't go past "2020-01-21" or band 6443, don't know why that is.
+#'
 #'
 #' @param band a band number (defaults to 0, which is 2002-06-01)
 #'
@@ -143,9 +154,14 @@ csql
 #' mursst()
 #' mursst_time("2019-10-08")
 mursst <- function(band = 0) {
+  Sys.setenv("AWS_NO_SIGN_REQUEST"="yes")
   sprintf("ZARR:\"/vsis3/mur-sst/zarr\":/analysed_sst:%i", band)
 }
 
+#' @param time a time value to pick, see Details
+#'
+#' @name mursst
+#' @export
 mursst_time <- function(time = NULL) {
   Sys.setenv("AWS_NO_SIGN_REQUEST"="yes")
   epoch <- as.Date("2002-06-01")

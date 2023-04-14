@@ -9,11 +9,17 @@ CGAZ()
 
 CGAZ_sql(codes)
 }
+\arguments{
+\item{codes}{a list of iso3 country codes, or country names (this is a bit sketchy)}
+}
 \description{
 the geoBoundaries countries
 }
 \examples{
 CGAZ_sql(c("Australia", "New Zealand"))
 CGAZ_sql(c("AUS", "NZL"))
-## do something like gdal_raster_data(gebco(), target_res = 1, options = c("-crop_to_cutline", "-cutline", CGAZ(), "-csql", CGAZ_sql(c("Australia", "New Zealand")) ))
+## do something like gdal_raster_data(gebco(), target_res = 1,
+##                                        options = c("-crop_to_cutline",
+##                                        "-cutline", CGAZ(),
+##                                         "-csql", CGAZ_sql(c("Australia", "New Zealand")) ))
 }

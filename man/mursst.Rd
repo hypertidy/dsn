@@ -2,18 +2,27 @@
 % Please edit documentation in R/sources.R
 \name{mursst}
 \alias{mursst}
+\alias{mursst_time}
 \title{MURSST (GHRSST) sst Zarr source}
 \usage{
 mursst(band = 0)
+
+mursst_time(time = NULL)
 }
 \arguments{
 \item{band}{a band number (defaults to 0, which is 2002-06-01)}
+
+\item{time}{a time value to pick, see Details}
 }
 \value{
 a string, a dsn for Zarr MURSST
 }
 \description{
-Don't trust this, I don't know if it's really daily like the NetCDF files are. GDAL should have the time metadata in the 2D interface but does not.
+This is used a lot of noisy fanfare about why everyone must move to Zarr in
+the cloud. It's really big, daily netcdf blended/observation/model data on a
+36000x18000 grid, a regular grid in -180, 180, -90, 90.
+}
+\details{
 It seems like this source doesn't go past "2020-01-21" or band 6443, don't know why that is.
 }
 \examples{

@@ -3,3 +3,6 @@
 .Rdata
 .httr-oauth
 .DS_Store
+dsn.Rcheck/
+dsn*.tar.gz
+dsn*.tgz

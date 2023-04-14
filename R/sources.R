@@ -43,6 +43,10 @@ wms_arcgis_mapserver_tms <- function() "<GDAL_WMS><Service name=\"TMS\"><ServerU
 
 #' @name dsn-sources
 #' @export
+nasadem <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/NASADEM/NASADEM_be.vrt"
+
+#' @name dsn-sources
+#' @export
 cop90 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP90/COP90_hh.vrt"
 #' @name dsn-sources
 #' @export

@@ -14,6 +14,7 @@
 \alias{wms_googleterrainstreets_tms}
 \alias{wms_virtualearth_street}
 \alias{wms_arcgis_mapserver_tms}
+\alias{nasadem}
 \alias{cop90}
 \alias{cop30}
 \title{Imagery online sources}
@@ -41,6 +42,8 @@ wms_googleterrainstreets_tms()
 wms_virtualearth_street()
 
 wms_arcgis_mapserver_tms()
+
+nasadem()
 
 cop90()
 

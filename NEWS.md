@@ -1,5 +1,7 @@
 # dsn 0.0.1
 
+* New 'nasadem()' for the OpenTopo VRT. 
+
 * dsn now contains the source functions that whatarelief had, whatarelief imports them and re-exports some. 
 
 * New functions for 'datatype()' . 

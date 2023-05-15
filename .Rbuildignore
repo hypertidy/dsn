@@ -7,3 +7,4 @@
 ^dsn\.Rcheck$
 ^dsn.*\.tar\.gz$
 ^dsn.*\.tgz$
+^gdalwmscache$

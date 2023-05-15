@@ -206,3 +206,17 @@ tasmap_sources <- function() {
     street = "https://services.thelist.tas.gov.au/arcgis/rest/services/Raster/TTSA/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
   )
 }
+
+
+
+## see here for examples
+## https://gist.github.com/mdsumner/c3f7dad2703b1ef73b95a4caa1daef55
+ozgrab_bag_sources <- c("WMTS:https://maps.sa.gov.au/arcgis/rest/services/BaseMaps/StreetMap_wmas/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+                        "WMTS:https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Basemaps/QldMap_Topo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+                        "WMTS:https://mapprod1.environment.nsw.gov.au/arcgis/rest/services/LandCap/LandAndSoilCapability_EDP/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+                        "WMS:http://services.ga.gov.au/gis/services/Ausimage_Canberra_2014/ImageServer/WMSServer?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Ausimage_Canberra_2014&SRS=EPSG:4326&BBOX=148.887753,-35.516701,149.293527,-35.122388",
+                        "WMTS:https://services.ga.gov.au/gis/rest/services/Topographic_Base_Map/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+                        "WMS:https://services.ga.gov.au/gis/services/Marine_Geomorphic_Features/MapServer/WmsServer?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Geomorphic_Features&SRS=EPSG:4326&BBOX=93.412315,-60.923248,171.801102,-8.472063",
+                        "WMTS:https://gissdi.dmp.wa.gov.au/gisexternal/rest/services/External/GSD_Basemap_External/MapServer/WMTS/1.0.0/WMTSCapabilities.xml",
+                        "WMTS:https://base.maps.vic.gov.au/service?service=wmts&request=getCapabilities,layer=CARTO_WM_256"
+)

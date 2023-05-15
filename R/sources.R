@@ -82,8 +82,16 @@ gebco21 <- function(vsi = TRUE) {
 
 #' @name gebco
 #' @export
+gebco22_bedrock <- function(vsi = TRUE) {
+  url  <- "/vsicurl/https://gebco2023.s3.valeria.science/gebco_2023_land_cog.tif"
+  if (vsi) url <- file.path("/vsicurl", url)
+  url
+}
+#' @name gebco
+#' @export
 gebco22 <- function(vsi = TRUE) {
-  url <- "https://gebco2022.s3.valeria.science/gebco_2022_complete_cog.tif"
+  url <- "/vsicurl/https://gebco2023.s3.valeria.science/gebco_2023_sub_ice_topo_cog.tif"
+
   if (vsi) url <- file.path("/vsicurl", url)
   url
 }
@@ -175,4 +183,26 @@ mursst_time <- function(time = NULL) {
   if (band < 0) stop("time is before the beginning")
   if (time > (Sys.Date()-5)) message("time is only 5 days ago or in the future")
   mursst(band)
+}
+
+
+tasmap_sources <- function() {
+  c(aerialphoto2020 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2020/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2020,tilematrixset=default028mm",
+    aerialphoto2021 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2021/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2021,tilematrixset=default028mm",
+    aerialphoto2022 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2022/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2022,tilematrixset=default028mm",
+    aerialphoto2023 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2023/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2023,tilematrixset=default028mm",
+    esgismapbookpublic = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/ESgisMapBookPUBLIC/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_ESgisMapBookPUBLIC,tilematrixset=default028mm",
+    hillshadegrey = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/HillshadeGrey/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_HillshadeGrey,tilematrixset=default028mm",
+    hillshade = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Hillshade,tilematrixset=default028mm",
+    orthophoto = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Orthophoto/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Orthophoto,tilematrixset=default028mm",
+    simplebasemap = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/SimpleBasemap/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_SimpleBasemap,tilematrixset=default028mm",
+    tasmap100k = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Tasmap100K/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Tasmap100K,tilematrixset=default028mm",
+    tasmap250k = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Tasmap250K/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Tasmap250K,tilematrixset=default028mm",
+    tasmap25k = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Tasmap25K/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Tasmap25K,tilematrixset=default028mm",
+    tasmap500k = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Tasmap500K/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Tasmap500K,tilematrixset=default028mm",
+    tasmapraster = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/TasmapRaster/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_TasmapRaster,tilematrixset=default028mm",
+    topographicgrayscale = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/TopographicGrayScale/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_TopographicGrayScale,tilematrixset=default028mm",
+    topographic = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_Topographic,tilematrixset=default028mm",
+    street = "https://services.thelist.tas.gov.au/arcgis/rest/services/Raster/TTSA/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+  )
 }

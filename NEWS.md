@@ -1,3 +1,10 @@
+# dev
+
+* Add internal lists of tasmap_sources. 
+
+
+* Fix gebco to use ice surface, add bedrock option (thanks to Philippe Massicotte). 
+
 # dsn 0.0.1
 
 * New 'nasadem()' for the OpenTopo VRT. 

@@ -5,11 +5,14 @@
 \alias{gebco22}
 \alias{gebco21}
 \alias{gebco19}
+\alias{gebco22_bedrock}
 \title{GEBCO source dsn}
 \usage{
 gebco(vsi = TRUE)
 
 gebco21(vsi = TRUE)
+
+gebco22_bedrock(vsi = TRUE)
 
 gebco22(vsi = TRUE)
 

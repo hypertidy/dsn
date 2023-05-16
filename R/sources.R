@@ -51,6 +51,9 @@ cop90 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP90/CO
 #' @name dsn-sources
 #' @export
 cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/COP30_hh.vrt"
+#' @name dsn-sources
+#' @export
+srtm15 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/SRTM15Plus/SRTM15Plus_srtm.vrt"
 
 #' GEBCO source dsn
 #'
@@ -63,7 +66,7 @@ cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/CO
 #' See note about which forms of the bedrock vs ice surface are available. Generally we use the ice surface form, because that is what encountered while navigating the surface of the Earth. But, the bedrock is of course also of interest.
 #'
 #'
-#' @warning please note that `gebco21()`, `gebco19()` return the *ice surface* form, while `gebco22()` returns the bedrock form. With `gebco23()` and `gebco23_bedrock()` these are now both avaiable, again thanks to Philippe Massicotte.
+#' @section warning: please note that `gebco21()`, `gebco19()` return the *ice surface* form, while `gebco22()` returns the bedrock form. With `gebco23()` and `gebco23_bedrock()` these are now both avaiable, again thanks to Philippe Massicotte.
 #'
 #' @param vsi include the 'vsicurl' prefix (`TRUE` is default)
 #'

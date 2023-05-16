@@ -37,6 +37,10 @@ GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division.
 
 See note about which forms of the bedrock vs ice surface are available. Generally we use the ice surface form, because that is what encountered while navigating the surface of the Earth. But, the bedrock is of course also of interest.
 }
+\section{warning}{
+ please note that \code{gebco21()}, \code{gebco19()} return the \emph{ice surface} form, while \code{gebco22()} returns the bedrock form. With \code{gebco23()} and \code{gebco23_bedrock()} these are now both avaiable, again thanks to Philippe Massicotte.
+}
+
 \examples{
 gebco()
 }

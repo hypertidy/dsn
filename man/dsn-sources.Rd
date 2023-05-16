@@ -17,6 +17,7 @@
 \alias{nasadem}
 \alias{cop90}
 \alias{cop30}
+\alias{srtm15}
 \title{Imagery online sources}
 \usage{
 wms_arcgis_mapserver_ESRI.WorldImagery_tms()
@@ -48,6 +49,8 @@ nasadem()
 cop90()
 
 cop30()
+
+srtm15()
 }
 \description{
 Raster and imagery online

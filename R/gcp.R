@@ -31,7 +31,7 @@ gcp_extent <- function(dimension, extent = NULL) {
   return(cbind(index, coords))
 }
 
-#' @param gcp ground control point ('col,row,x,y[,z]')
+#' @param gcp ground control point ('col,row,x,y')
 #'
 #' @name gcp_extent
 #' @export

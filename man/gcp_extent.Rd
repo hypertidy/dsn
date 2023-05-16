@@ -14,7 +14,7 @@ gcp_extent_arg(gcp)
 
 \item{extent}{extent 'xmin,xmax,ymin,ymax'}
 
-\item{gcp}{ground control point ('col,row,x,y\link{,z}')}
+\item{gcp}{ground control point ('col,row,x,y')}
 }
 \value{
 \code{gcp_extent} returns the col,row,x,y values, \code{gcp_extent_arg} returns

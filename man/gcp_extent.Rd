@@ -10,7 +10,11 @@ gcp_extent(dimension, extent = NULL)
 gcp_extent_arg(gcp)
 }
 \arguments{
-\item{extent}{}
+\item{dimension}{size of grid 'ncol,nrow'}
+
+\item{extent}{extent 'xmin,xmax,ymin,ymax'}
+
+\item{gcp}{ground control point ('col,row,x,y\link{,z}')}
 }
 \value{
 \code{gcp_extent} returns the col,row,x,y values, \code{gcp_extent_arg} returns
@@ -21,7 +25,7 @@ Create a set of GCPs (ground control points) from dimension, extent
 }
 \examples{
 gcp_extent(c(10, 20))
-dsn <- sprintf("vrt://\%s?\%s", mem(volcano), gcp_extent_arg(dim(volcano)))
-gcp <- gcp_extent(dim(volcano))
+dsn <- sprintf("vrt://\%s?\%s", mem(volcano), gcp_extent_arg(gcp_extent(dim(volcano))))
+gcp <- gcp_extent(dim(volcano), c(-180, 180, -90, 90))
 gcp_extent_arg(gcp)
 }

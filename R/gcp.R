@@ -1,8 +1,8 @@
 ## extent here is the centres of the corner cells
 #' Create a set of GCPs (ground control points) from dimension, extent
 #'
-#' @param dimension
-#' @param extent
+#' @param dimension size of grid 'ncol,nrow'
+#' @param extent extent 'xmin,xmax,ymin,ymax'
 #'
 #' @return `gcp_extent` returns the col,row,x,y values, `gcp_extent_arg` returns
 #' formatted as a GDAL 'vrt://' connection string
@@ -10,8 +10,8 @@
 #'
 #' @examples
 #' gcp_extent(c(10, 20))
-#' dsn <- sprintf("vrt://%s?%s", mem(volcano), gcp_extent_arg(dim(volcano)))
-#' gcp <- gcp_extent(dim(volcano))
+#' dsn <- sprintf("vrt://%s?%s", mem(volcano), gcp_extent_arg(gcp_extent(dim(volcano))))
+#' gcp <- gcp_extent(dim(volcano), c(-180, 180, -90, 90))
 #' gcp_extent_arg(gcp)
 gcp_extent <- function(dimension, extent = NULL) {
 
@@ -31,6 +31,8 @@ gcp_extent <- function(dimension, extent = NULL) {
   return(cbind(index, coords))
 }
 
+#' @param gcp ground control point ('col,row,x,y[,z]')
+#'
 #' @name gcp_extent
 #' @export
 gcp_extent_arg <- function(gcp) {

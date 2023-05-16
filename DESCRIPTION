@@ -1,6 +1,6 @@
 Package: dsn
 Title: Data Source Name Helpers for Use With GDAL
-Version: 0.0.1.9005
+Version: 0.0.1.9006
 Authors@R: 
     person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre"))
 Description: Simple helpers for GDAL data source names (DSN), for prefix and suffix and other handling. 

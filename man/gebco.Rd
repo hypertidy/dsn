@@ -5,14 +5,17 @@
 \alias{gebco22}
 \alias{gebco21}
 \alias{gebco19}
-\alias{gebco22_bedrock}
+\alias{gebco23_bedrock}
+\alias{gebco23}
 \title{GEBCO source dsn}
 \usage{
 gebco(vsi = TRUE)
 
 gebco21(vsi = TRUE)
 
-gebco22_bedrock(vsi = TRUE)
+gebco23_bedrock(vsi = TRUE)
+
+gebco23(vsi = TRUE)
 
 gebco22(vsi = TRUE)
 
@@ -31,6 +34,8 @@ A data source name to the GEBCO  elevation 'COG' GeoTIFF.
 GEBCO 2022 is created and hosted by Philippe Massicotte.
 
 GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division.
+
+See note about which forms of the bedrock vs ice surface are available. Generally we use the ice surface form, because that is what encountered while navigating the surface of the Earth. But, the bedrock is of course also of interest.
 }
 \examples{
 gebco()

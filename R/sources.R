@@ -60,6 +60,11 @@ cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/CO
 #'
 #' GEBCO 2019 and 2021 created and hosted by the Australian Antarctic Division.
 #'
+#' See note about which forms of the bedrock vs ice surface are available. Generally we use the ice surface form, because that is what encountered while navigating the surface of the Earth. But, the bedrock is of course also of interest.
+#'
+#'
+#' @warning please note that `gebco21()`, `gebco19()` return the *ice surface* form, while `gebco22()` returns the bedrock form. With `gebco23()` and `gebco23_bedrock()` these are now both avaiable, again thanks to Philippe Massicotte.
+#'
 #' @param vsi include the 'vsicurl' prefix (`TRUE` is default)
 #'
 #' @returns character string, URL to online GeoTIFF
@@ -69,7 +74,7 @@ cop30 <- function() "/vsicurl/https://opentopography.s3.sdsc.edu/raster/COP30/CO
 #' @examples
 #' gebco()
 gebco <- function(vsi = TRUE) {
-  gebco22(vsi = vsi)
+  gebco23(vsi = vsi)
 }
 
 #' @name gebco
@@ -82,17 +87,28 @@ gebco21 <- function(vsi = TRUE) {
 
 #' @name gebco
 #' @export
-gebco22_bedrock <- function(vsi = TRUE) {
-  url  <- "/vsicurl/https://gebco2023.s3.valeria.science/gebco_2023_land_cog.tif"
+gebco23_bedrock <- function(vsi = TRUE) {
+  url  <- "https://gebco2023.s3.valeria.science/gebco_2023_sub_ice_topo_cog.tif"
   if (vsi) url <- file.path("/vsicurl", url)
   url
 }
+
 #' @name gebco
 #' @export
-gebco22 <- function(vsi = TRUE) {
-  url <- "/vsicurl/https://gebco2023.s3.valeria.science/gebco_2023_sub_ice_topo_cog.tif"
+gebco23 <- function(vsi = TRUE) {
+  url <- "https://gebco2023.s3.valeria.science/gebco_2023_land_cog.tif"
 
   if (vsi) url <- file.path("/vsicurl", url)
+  url
+}
+
+#' @name gebco
+#' @export
+gebco22 <- function (vsi = TRUE)
+{
+  url <- "https://gebco2022.s3.valeria.science/gebco_2022_complete_cog.tif"
+  if (vsi)
+    url <- file.path("/vsicurl", url)
   url
 }
 

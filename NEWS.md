@@ -3,7 +3,10 @@
 * Add internal lists of tasmap_sources. 
 
 
-* Fix gebco to use ice surface, add bedrock option (thanks to Philippe Massicotte). 
+* Fix gebco to use ice surface, add bedrock option for 2023 (thanks to Philippe Massicotte). 
+
+* Clarify which gebco() functions return bedrock vs. ice surface. 
+
 
 # dsn 0.0.1
 

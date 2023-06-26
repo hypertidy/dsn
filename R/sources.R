@@ -205,6 +205,28 @@ mursst_time <- function(time = NULL) {
 }
 
 
+usgs_hydro <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSHydroCached/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSHydroCached,tilematrixset=default028mm?"
+}
+usgs_imagery <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSImageryOnly,tilematrixset=default028mm?"
+}
+usgs_image_topo <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSImageryTopo,tilematrixset=default028mm?"
+}
+usgs_shade <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSShadedReliefOnly,tilematrixset=default028mm?"
+}
+usgs_shade <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSShadedReliefOnly,tilematrixset=default028mm?"
+}
+usgs_tnmblank <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTNMBlank/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTNMBlank,tilematrixset=default028mm?"
+}
+usgs_topo <- function() {
+  "WMTS:https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=USGSTopo,tilematrixset=default028mm?"
+}
+
 tasmap_sources <- function() {
   c(aerialphoto2020 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2020/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2020,tilematrixset=default028mm",
     aerialphoto2021 = "WMTS:https://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/AerialPhoto2021/MapServer/WMTS/1.0.0/WMTSCapabilities.xml,layer=Basemaps_AerialPhoto2021,tilematrixset=default028mm",

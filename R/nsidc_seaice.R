@@ -3,7 +3,8 @@
 #'
 #' Data is colour-palette GeoTIFF in polar stereographic raster format.
 #'
-#' The availability of the date is not checked currently.
+#' The availability of the date is not checked currently, the minimum date is 1978-10-26. Please note that these
+#' data were only every two days from date, until a later time (FIXME get these details).
 #'
 #' @param date date in POSIXct or Date format, see Details
 #' @param hemisphere hemisphere of data source, north or south

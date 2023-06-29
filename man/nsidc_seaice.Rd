@@ -30,7 +30,8 @@ character string, GDAL readable DSN to a colour palette GeoTIFF (see args 'vsi' 
 Data is colour-palette GeoTIFF in polar stereographic raster format.
 }
 \details{
-The availability of the date is not checked currently.
+The availability of the date is not checked currently, the minimum date is 1978-10-26. Please note that these
+data were only every two days from date, until a later time (FIXME get these details).
 }
 \examples{
 nsidc_seaice("2023-06-27")

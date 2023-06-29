@@ -1,5 +1,7 @@
 # dev
 
+* New `nsdic_seaice()` for the GeoTIFF images. 
+
 * New `srtm15()` source. 
 
 * Add internal lists of tasmap_sources. 

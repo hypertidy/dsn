@@ -1,5 +1,7 @@
 # dev
 
+* All data source functions have been removed to spatial.datasources. 
+
 * New `nsdic_seaice()` for the GeoTIFF images. 
 
 * New `srtm15()` source. 

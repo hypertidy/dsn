@@ -5,6 +5,7 @@
 #'
 #' @param x character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)
 #' @param driver character vector of appropriate GDAL driver name
+#' @param sign configure for automatic Planetary Computer signing by GDAL
 #' @return character vector
 #'
 #' @name prefix
@@ -18,8 +19,16 @@
 #' unvsicurl("/vsicurl/https://netcdf-r-us.org/f.nc")
 #'
 #' unprefix("NETCDF:/u/user/somefile.nc")
-vsicurl <- function(x) {
-  sprintf("/vsicurl/%s", x)
+#'
+#' ## MPC signing
+#' mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_20231125T033609_B04_10m.tif"
+#' vsicurl(mpc , sign = TRUE)
+vsicurl <- function(x, sign = FALSE) {
+  if (sign) {
+    sprintf("/vsicurl?pc_url_signing=yes&url=%s", x)
+ } else {
+    sprintf("/vsicurl/%s", x)
+  }
 }
 
 #' @name prefix

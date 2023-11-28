@@ -1,5 +1,7 @@
 # dev
 
+* `vsicurl()` gains pc_url_signing with the `sign` arg (GDAL >= 3.5). 
+
 * All data source functions have been removed to spatial.datasources. 
 
 * New `nsdic_seaice()` for the GeoTIFF images. 

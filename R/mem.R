@@ -46,7 +46,7 @@ mem <- function(x, extent = NULL, projection = "") {
   offset <- c(Int32 = 4, Float64 = 8, Byte = 1)[type]
   gt <- ext_dim(extent, dimension)
 
-  addr <- as.double(lobstr::obj_addr(x)) + 6 * offset
+  addr <- as.double(addr(x)) + 6 * offset
 
   spatialref <- ""
 
@@ -59,4 +59,21 @@ mem <- function(x, extent = NULL, projection = "") {
   }
   dsn
 
+}
+
+
+
+#' Get address of object
+#'
+#' This is primarily for use by mem().
+#'
+#' Adapted from data.table::address
+#'
+#' @param x object to get address of
+#'
+#' @return address as a string
+#'
+#' @noRd
+addr <- function(x) {
+    .Call("C_addr", x = x, PACKAGE = "dsn")
 }

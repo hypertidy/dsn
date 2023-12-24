@@ -1,9 +1,12 @@
 Package: dsn
-Title: Data Source Name Helpers for Use With GDAL
-Version: 0.0.1.9010
+Title: Data Source Name and Description Helpers for Use With 'GDAL'
+Version: 0.0.1.9011
 Authors@R: 
-    person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre"))
-Description: Simple helpers for GDAL data source names (DSN), for prefix and suffix and other handling. 
+ c(person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre")), 
+      person("Matt", "Dowle", role = "ctb", comment = "wrote the source code used here in C_addr, originally in data.table"))
+Description: Simple helpers for 'GDAL' data source names ('DSN'), prefix and 
+ suffix and other handling. 'GDAL' is the Geospatial Data Abstraction Library, 
+ not used by this package directly. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

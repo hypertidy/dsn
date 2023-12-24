@@ -22,7 +22,6 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #' @param projection projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)
 #' @return character string, a DSN for use by GDAL
 #' @export
-#' @importFrom lobstr obj_addr
 #' @examples
 #' m <- matrix(as.integer(c(0L, 0, 0, 1)), 5L, 4L)
 #' mem(m)

@@ -42,6 +42,6 @@ unvsicurl("/vsicurl/https://netcdf-r-us.org/f.nc")
 unprefix("NETCDF:/u/user/somefile.nc")
 
 ## MPC signing
-mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_20231125T033609_B04_10m.tif"
+mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_B04_10m.tif"
 vsicurl(mpc , sign = TRUE)
 }

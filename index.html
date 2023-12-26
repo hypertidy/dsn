@@ -84,16 +84,16 @@
 </li>
 <li>creating a DATAPOINTER connection for the MEM driver, i.e. we can create data arrays as rasters from R objects, and use R objects for georeferencing with geolocation arrays (either rectilinear or curvilinear, or degenerate versions of these)</li>
 <li>datatype helpers for the internal GDT_ types in GDAL</li>
-<li>creating gcp lists for use with VRT</li>
+<li>creating GCP lists for use with VRT, for simple extent georeferencing or full polynomial ground control point registration</li>
 </ul>
-<p>Please see <a href="https://hypertidy.github.io/vapour/reference/vapour_vrt.html" class="external-link">vapour::vapour_vrt()</a> for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and in general intends to be purely string handling, and not make use of the format libraries at all.</p>
+<p>Please see the Python package <a href="matrix(x%5B%5B1%5D%5D,%20attr(x,%20%22dimension%22)%5B2L%5D,%20byrow%20=%20TRUE)">osgeo.gdal</a> or the R package <a href="https://hypertidy.github.io/vapour/reference/vapour_vrt.html" class="external-link">vapour::vapour_vrt()</a> for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and in general intends to be purely string handling, and not make use of the format libraries at all.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of dsn from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"hypertidy/dsn"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"hypertidy/dsn"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -119,16 +119,32 @@
 <span></span>
 <span><span class="fu"><a href="reference/prefix.html">unprefix</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/u/user/somfile.nc"</span></span></code></pre></div>
+<p>Create a datapointer source for the volcano dataset.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>
+<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">volcano</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">volcano</span><span class="op">)</span><span class="op">:</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">volcano</span><span class="op">)</span><span class="op">:</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">ex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2667400</span>, <span class="fl">2668010</span>, <span class="fl">6478700</span>, <span class="fl">6479570</span><span class="op">)</span></span>
+<span><span class="va">crs</span> <span class="op">&lt;-</span> <span class="st">"EPSG:27200"</span></span>
+<span><span class="op">(</span><span class="va">dsn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem.html">mem</a></span><span class="op">(</span><span class="va">v</span>, extent <span class="op">=</span> <span class="va">ex</span>, projection <span class="op">=</span> <span class="va">crs</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">vol</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">gdal_raster_data</span><span class="op">(</span><span class="va">dsn</span><span class="op">)</span></span>
+<span><span class="va">im</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">gdal_raster_image</span><span class="op">(</span><span class="fu">sds</span><span class="fu">::</span><span class="fu">wms_arcgis_mapserver_ESRI.WorldImagery_tms</span><span class="op">(</span><span class="op">)</span>, target_crs <span class="op">=</span> <span class="va">crs</span>, target_ext <span class="op">=</span> <span class="va">ex</span><span class="op">)</span></span>
+<span><span class="co">#im[[1]] &lt;- sprintf("%s4D", im[[1]])</span></span>
+<span><span class="fu">ximage</span><span class="fu">::</span><span class="fu">ximage</span><span class="op">(</span><span class="va">im</span>, add <span class="op">=</span> <span class="cn">F</span>, asp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">ximage</span><span class="fu">::</span><span class="fu">xcontour</span><span class="op">(</span><span class="va">vol</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"hotpink"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<figure><img src="reference/figures/Rplot.png" title="Aerial imagery and the volcano dataset" alt="Aerial imagery and the volcano dataset contoured on top"><figcaption aria-hidden="true">
+Aerial imagery and the volcano dataset contoured on top
+</figcaption></figure>
 </div>
 <div class="section level2">
 <h2 id="real-world-example">Real world example<a class="anchor" aria-label="anchor" href="#real-world-example"></a>
 </h2>
 <p>Here is a less basic and real world example.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
 <p>These files have four variables and so need to be referenced using subdataset syntax. They are online so we need GDAL’s virtual file system <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">vsicurl</a> to access it. Also, they are <a href="https://github.com/mdsumner/fixoisst" class="external-link">non-compliant NetCDF</a> in that they don’t declare in a robust way what their coordinate reference system is (it’s longlat).</p>
 <p>(Even if you have the files locally you still need the subdataset and crs handling).</p>
 <p>So, we can find this stuff out with investigation. See there are subdatasets <code>sst</code>, <code>anom</code>, <code>err</code>, <code>ice</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">u</span> <span class="op">&lt;-</span> <span class="st">"https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_raster_info</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsicurl"</span>, <span class="va">u</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 15</span></span>
@@ -152,12 +168,12 @@
 <span><span class="co">#&gt;   .. ..$ : NULL</span></span></code></pre></div>
 <p>And, with GDAL tools we can augment the missing metadata and get the subdatasets etc.</p>
 <p>Please note that the subdatasets might not always be in order, you really need to ask for them by name.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_sds_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsicurl"</span>, <span class="va">u</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">sst0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">":sst$"</span>, <span class="va">sds</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "NETCDF:\"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc\":sst"</span></span></code></pre></div>
 <p>Finally, now we take that subdataset and augment it (this creates a GDAL open dataset in memory, and serializes it to in-memory VRT text).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vrt</span> <span class="op">&lt;-</span> <span class="fu">vapour</span><span class="fu">::</span><span class="fu">vapour_vrt</span><span class="op">(</span><span class="va">sst0</span>, projection <span class="op">=</span> <span class="st">"OGC:CRS84"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">vrt</span></span>
@@ -187,7 +203,7 @@
 <p>So the dsn package has the following functions <code><a href="reference/prefix.html">vsicurl()</a></code>, <code><a href="reference/sds.html">sds()</a></code>, and <code><a href="reference/vrtcon.html">vrtcon()</a></code>.</p>
 <p><code><a href="reference/vrtcon.html">vrtcon()</a></code> is for a <a href="https://gdal.org/drivers/raster/vrt.html#vrt-connection-string" class="external-link">VRT connection</a> string, a compact and dependency free syntax for augmenting GDAL data source names, there are new features coming for that in GDAL 3.7.</p>
 <p>None of this requires GDAL or for any file or URL querying to be done at all. This is useful because <em>we already did it</em> many times over many years, and now we want to summarize our hard won knowledge in a simple augmented file or URL DSN.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/dsn" class="external-link">dsn</a></span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">vsi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prefix.html">vsicurl</a></span><span class="op">(</span><span class="va">u</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span></span>
@@ -201,41 +217,41 @@
 <span><span class="co">## and with that tiny bit of text we are also language independent</span></span>
 <span><span class="co">## (but my python installation is not up to scratch yet ...)</span></span></code></pre></div>
 <p>Here is a gdalinfo output just to prove it works (requires GDAL 3.7 for the <code>vrt://...?a_srs</code> syntax).</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>gdalinfo <span class="st">"vrt://NETCDF:</span><span class="sc">\"</span><span class="st">/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc</span><span class="sc">\"</span><span class="st">:sst?a_srs=OGC:CRS84"</span> <span class="sc">-</span>nomd</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Driver<span class="sc">:</span> VRT<span class="sc">/</span>Virtual Raster</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Files<span class="sc">:</span> NETCDF<span class="sc">:</span><span class="st">"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span><span class="sc">:</span>sst</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>Size is <span class="dv">1440</span>, <span class="dv">720</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>Coordinate System is<span class="sc">:</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>GEOGCRS[<span class="st">"WGS 84"</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    DATUM[<span class="st">"World Geodetic System 1984"</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        ELLIPSOID[<span class="st">"WGS 84"</span>,<span class="dv">6378137</span>,<span class="fl">298.257223563</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            LENGTHUNIT[<span class="st">"metre"</span>,<span class="dv">1</span>]],</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">6326</span>]],</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    PRIMEM[<span class="st">"Greenwich"</span>,<span class="dv">0</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>],</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">8901</span>]],</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    CS[ellipsoidal,<span class="dv">2</span>],</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"longitude"</span>,east,</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">1</span>],</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]],</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"latitude"</span>,north,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">2</span>],</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]]]</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>Data axis to CRS axis mapping<span class="sc">:</span> <span class="dv">1</span>,<span class="dv">2</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>Origin <span class="ot">=</span> (<span class="fl">0.000000000000000</span>,<span class="fl">90.000000000000000</span>)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>Pixel Size <span class="ot">=</span> (<span class="fl">0.250000000000000</span>,<span class="sc">-</span><span class="fl">0.250000000000000</span>)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>Corner Coordinates<span class="sc">:</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>Upper <span class="fu">Left</span>  (   <span class="fl">0.0000000</span>,  <span class="fl">90.0000000</span>) (  0d <span class="dv">0</span><span class="st">' 0.01"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"N)</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="st">Lower Left  (   0.0000000, -90.0000000) (  0d 0' 0.01"</span>E, 90d <span class="dv">0</span><span class="st">' 0.00"S)</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="st">Upper Right (     360.000,      90.000) (360d 0'</span> <span class="fl">0.00</span><span class="st">"E, 90d 0' 0.00"</span>N)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>Lower <span class="fu">Right</span> (     <span class="fl">360.000</span>,     <span class="sc">-</span><span class="fl">90.000</span>) (360d <span class="dv">0</span><span class="st">' 0.00"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"S)</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="st">Center      ( 180.0000000,   0.0000000) (180d 0' 0.00"</span>E,  0d <span class="dv">0</span><span class="st">' 0.01"N)</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="st">Band 1 Block=1440x720 Type=Int16, ColorInterp=Undefined</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="st">  NoData Value=-999</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="st">  Unit Type: Celsius</span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="st">  Offset: 0,   Scale:0.00999999977648258</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gdalinfo <span class="st">"vrt://NETCDF:</span><span class="sc">\"</span><span class="st">/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc</span><span class="sc">\"</span><span class="st">:sst?a_srs=OGC:CRS84"</span> <span class="sc">-</span>nomd</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Driver<span class="sc">:</span> VRT<span class="sc">/</span>Virtual Raster</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Files<span class="sc">:</span> NETCDF<span class="sc">:</span><span class="st">"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span><span class="sc">:</span>sst</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>Size is <span class="dv">1440</span>, <span class="dv">720</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Coordinate System is<span class="sc">:</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>GEOGCRS[<span class="st">"WGS 84"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    DATUM[<span class="st">"World Geodetic System 1984"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        ELLIPSOID[<span class="st">"WGS 84"</span>,<span class="dv">6378137</span>,<span class="fl">298.257223563</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            LENGTHUNIT[<span class="st">"metre"</span>,<span class="dv">1</span>]],</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">6326</span>]],</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    PRIMEM[<span class="st">"Greenwich"</span>,<span class="dv">0</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>],</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">8901</span>]],</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    CS[ellipsoidal,<span class="dv">2</span>],</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"longitude"</span>,east,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">1</span>],</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]],</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"latitude"</span>,north,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">2</span>],</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]]]</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>Data axis to CRS axis mapping<span class="sc">:</span> <span class="dv">1</span>,<span class="dv">2</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>Origin <span class="ot">=</span> (<span class="fl">0.000000000000000</span>,<span class="fl">90.000000000000000</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>Pixel Size <span class="ot">=</span> (<span class="fl">0.250000000000000</span>,<span class="sc">-</span><span class="fl">0.250000000000000</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>Corner Coordinates<span class="sc">:</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>Upper <span class="fu">Left</span>  (   <span class="fl">0.0000000</span>,  <span class="fl">90.0000000</span>) (  0d <span class="dv">0</span><span class="st">' 0.01"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"N)</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="st">Lower Left  (   0.0000000, -90.0000000) (  0d 0' 0.01"</span>E, 90d <span class="dv">0</span><span class="st">' 0.00"S)</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="st">Upper Right (     360.000,      90.000) (360d 0'</span> <span class="fl">0.00</span><span class="st">"E, 90d 0' 0.00"</span>N)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>Lower <span class="fu">Right</span> (     <span class="fl">360.000</span>,     <span class="sc">-</span><span class="fl">90.000</span>) (360d <span class="dv">0</span><span class="st">' 0.00"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"S)</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="st">Center      ( 180.0000000,   0.0000000) (180d 0' 0.00"</span>E,  0d <span class="dv">0</span><span class="st">' 0.01"N)</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="st">Band 1 Block=1440x720 Type=Int16, ColorInterp=Undefined</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="st">  NoData Value=-999</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="st">  Unit Type: Celsius</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="st">  Offset: 0,   Scale:0.00999999977648258</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>

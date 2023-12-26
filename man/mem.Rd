@@ -4,7 +4,14 @@
 \alias{mem}
 \title{Generate a data source name (DSN) for the GDAL MEM driver}
 \usage{
-mem(x, extent = NULL, projection = "")
+mem(
+  x,
+  extent = NULL,
+  projection = "",
+  PIXELOFFSET = 0L,
+  LINEOFFSET = 0L,
+  BANDOFFSET = 1L
+)
 }
 \arguments{
 \item{x}{an R array, must be of numeric type (integer is converted to double)}

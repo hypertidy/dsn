@@ -27,11 +27,10 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #' mem(m)
 #' mem(volcano)
 #'
-mem <- function(x, extent = NULL, projection = "") {
+mem <- function(x, extent = NULL, projection = "", PIXELOFFSET = 0L, LINEOFFSET  = 0L, BANDOFFSET = 1L) {
   ## can't get Byte or Int32 to work
   type <- "Float64"
   x <- x * 1.0  ## make sure it's double haha
-
   dimension <- dim(x)
   if (is.null(extent)) extent <- c(0, dimension[1L], 0, dimension[2L])
   d3 <- 1
@@ -50,8 +49,8 @@ mem <- function(x, extent = NULL, projection = "") {
   spatialref <- ""
 
   dsn <- sprintf(
-  "MEM:::DATAPOINTER=\"%s\",PIXELS=%i,LINES=%i,BANDS=%i,DATATYPE=%s,GEOTRANSFORM=%s,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=1",
-   addr, dimension[1L], dimension[2L], d3, type, paste(gt, collapse = "/"))
+  "MEM:::DATAPOINTER=\"%s\",PIXELS=%i,LINES=%i,BANDS=%i,DATATYPE=%s,GEOTRANSFORM=%s,PIXELOFFSET=%i,LINEOFFSET=%i,BANDOFFSET=%i",
+   addr, dimension[1L], dimension[2L], d3, type, paste(gt, collapse = "/"), PIXELOFFSET, LINEOFFSET, BANDOFFSET)
   if (!is.null(projection) && length(projection) > 0 && !is.na(projection) && is.character(projection) && nzchar(projection)) {
     spatialref <- sprintf("SPATIALREFERENCE=\"%s\"", projection[1L])
     dsn <- sprintf("%s,%s", dsn, spatialref)

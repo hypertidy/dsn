@@ -32,9 +32,12 @@ string handling for things commonly used for GDAL:
   georeferencing with geolocation arrays (either rectilinear or
   curvilinear, or degenerate versions of these)
 - datatype helpers for the internal GDT\_ types in GDAL
-- creating gcp lists for use with VRT
+- creating GCP lists for use with VRT, for simple extent georeferencing
+  or full polynomial ground control point registration
 
-Please see
+Please see the Python package
+[osgeo.gdal](matrix(x%5B%5B1%5D%5D,%20attr(x,%20%22dimension%22)%5B2L%5D,%20byrow%20=%20TRUE))
+or the R package
 [vapour::vapour_vrt()](https://hypertidy.github.io/vapour/reference/vapour_vrt.html)
 for actual use of GDAL to extend a data source name by opening the
 source and augmenting available information. dsn is intended to support
@@ -47,8 +50,8 @@ You can install the development version of dsn from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("hypertidy/dsn")
+# install.packages("pak")
+pak::pak("hypertidy/dsn")
 ```
 
 ## Example
@@ -80,6 +83,30 @@ declaration, so we have a simple `driver()` wrapper for that.
 unprefix(nc)
 #> [1] "/u/user/somfile.nc"
 ```
+
+Create a datapointer source for the volcano dataset.
+
+``` r
+library(dsn)
+v <- t(volcano[nrow(volcano):1, ncol(volcano):1])
+ex <- c(2667400, 2668010, 6478700, 6479570)
+crs <- "EPSG:27200"
+(dsn <- mem(v, extent = ex, projection = crs))
+
+vol <- vapour::gdal_raster_data(dsn)
+im <- vapour::gdal_raster_image(sds::wms_arcgis_mapserver_ESRI.WorldImagery_tms(), target_crs = crs, target_ext = ex)
+#im[[1]] <- sprintf("%s4D", im[[1]])
+ximage::ximage(im, add = F, asp = 1)
+ximage::xcontour(vol, add = TRUE, col = "hotpink", lwd = 2)
+```
+
+<figure>
+<img src="man/figures/Rplot.png"
+title="Aerial imagery and the volcano dataset"
+alt="Aerial imagery and the volcano dataset contoured on top" />
+<figcaption aria-hidden="true">Aerial imagery and the volcano dataset
+contoured on top</figcaption>
+</figure>
 
 ## Real world example
 

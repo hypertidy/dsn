@@ -80,6 +80,7 @@ v <- t(volcano[nrow(volcano):1, ncol(volcano):1])
 ex <- c(2667400, 2668010, 6478700, 6479570)
 crs <- "EPSG:27200"
 (dsn <- mem(v, extent = ex, projection = crs))
+## "MEM:::DATAPOINTER=\"94675260004928\",PIXELS=61,LINES=87,BANDS=1,DATATYPE=Float64,GEOTRANSFORM=2667400/10/0/6479570/0/-10,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=1,SPATIALREFERENCE=\"EPSG:27200\""
 
 vol <- vapour::gdal_raster_data(dsn)
 im <- vapour::gdal_raster_image(sds::wms_arcgis_mapserver_ESRI.WorldImagery_tms(), target_crs = crs, target_ext = ex)

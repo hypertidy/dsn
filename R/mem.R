@@ -19,7 +19,12 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #'
 #' @param x an R array, must be of numeric type (integer is converted to double)
 #' @param extent optional extent of the data in x,y c(xmin, xmax, ymin, ymax)
+#' @param dimension
+#' @param PIXELOFFSET
+#' @param LINEOFFSET
+#' @param BANDOFFSET
 #' @param projection projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)
+#'
 #' @return character string, a DSN for use by GDAL
 #' @export
 #' @examples
@@ -27,21 +32,27 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #' mem(m)
 #' mem(volcano)
 #'
-mem <- function(x, extent = NULL, projection = "", PIXELOFFSET = 0L, LINEOFFSET  = 0L, BANDOFFSET = 1L) {
+mem <- function(x, extent = NULL, projection = "", dimension = NULL, PIXELOFFSET = NULL, LINEOFFSET  = NULL, BANDOFFSET = NULL) {
   ## can't get Byte or Int32 to work
   type <- "Float64"
   x <- x * 1.0  ## make sure it's double haha
-  dimension <- dim(x)
+  if (is.null(dimension)) {
+    dimension <- dim(x)
+  }
   if (is.null(extent)) extent <- c(0, dimension[1L], 0, dimension[2L])
   d3 <- 1
   if (length(dimension) > 2L) d3 <- dimension[3L]
+  offset <- c(Int32 = 4, Float64 = 8, Byte = 1)[type]
 
+
+  if (is.null(PIXELOFFSET)) PIXELOFFSET <- 0
+  if (is.null(LINEOFFSET)) LINEOFFSET <- 0
+  if (is.null(BANDOFFSET)) BANDOFFSET <- offset * prod(dimension[1:2])
 
   # type <-  switch(typeof(x),
   #                 integer = "Int32",
   #                double = "Float64",
   #                 raw = "Byte")
-  offset <- c(Int32 = 4, Float64 = 8, Byte = 1)[type]
   gt <- ext_dim(extent, dimension)
 
   addr <- as.double(addr(x)) + 6 * offset

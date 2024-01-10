@@ -13,6 +13,6 @@ Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/hypertidy/dsn
+URL: https://github.com/hypertidy/dsn, https://hypertidy.github.io/dsn/
 BugReports: https://github.com/hypertidy/dsn/issues
 RoxygenNote: 7.2.3

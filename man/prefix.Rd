@@ -11,7 +11,7 @@
 \alias{unvsicurl}
 \title{Prefix handlers for GDAL data source names}
 \usage{
-vsicurl(x)
+vsicurl(x, sign = FALSE)
 
 vsizip(x)
 
@@ -27,6 +27,8 @@ unvsicurl(x)
 }
 \arguments{
 \item{x}{character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)}
+
+\item{sign}{configure for automatic Planetary Computer signing by GDAL}
 
 \item{driver}{character vector of appropriate GDAL driver name}
 }
@@ -44,4 +46,8 @@ driver("somefile.h5", "HDF5")
 unvsicurl("/vsicurl/https://netcdf-r-us.org/f.nc")
 
 unprefix("NETCDF:/u/user/somefile.nc")
+
+## MPC signing
+mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_B04_10m.tif"
+vsicurl(mpc , sign = TRUE)
 }

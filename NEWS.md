@@ -2,7 +2,13 @@
 
 * Add vsis3 and vsizip. 
 
-* All data source functions have been removed to spatial.datasources. 
+* All data source functions have been removed to sds. 
+
+* New internal C_addr, to replace lobstr import. 
+
+* `vsicurl()` gains pc_url_signing with the `sign` arg (GDAL >= 3.5). 
+
+* All data source functions have been removed to hypertidy/sds, so countrycode no longer needed. 
 
 * New `nsdic_seaice()` for the GeoTIFF images. 
 

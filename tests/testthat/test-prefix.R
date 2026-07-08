@@ -18,3 +18,26 @@ test_that("unprefix works", {
   expect_equal(unvsicurl(vsiu), "https://netcdf-r-us.org/f.nc")
   expect_equal(unprefix(pfnc), "/u/user/somefile.nc")
 })
+
+test_that("vsi prefixes use their own scheme", {
+  expect_equal(vsicurl("x"), "/vsicurl/x")
+  expect_equal(vsizip("x"),  "/vsizip/x")
+  expect_equal(vsis3("x"),   "/vsis3/x")
+  expect_equal(vsitar("x"),  "/vsitar/x")
+  expect_equal(vsigzip("x"), "/vsigzip/x")
+})
+
+test_that("vsi prefixes chain", {
+  ## the property sds depends on
+  expect_equal(vsizip(vsicurl("x")), "/vsizip//vsicurl/x")
+  expect_equal(vsis3(vsizip("x")),   "/vsis3//vsizip/x")
+})
+
+test_that("vsicurl signing", {
+  expect_equal(vsicurl("u", sign = TRUE),
+               "/vsicurl?pc_url_signing=yes&url=u")
+})
+
+test_that("un-prefix round trips", {
+  expect_equal(unvsicurl(vsicurl("https://h/f.nc")), "https://h/f.nc")
+})

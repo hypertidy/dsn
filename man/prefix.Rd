@@ -5,6 +5,8 @@
 \alias{vsicurl}
 \alias{vsizip}
 \alias{vsis3}
+\alias{vsitar}
+\alias{vsigzip}
 \alias{driver}
 \alias{netcdf}
 \alias{unprefix}
@@ -16,6 +18,10 @@ vsicurl(x, sign = FALSE)
 vsizip(x)
 
 vsis3(x)
+
+vsitar(x)
+
+vsigzip(x)
 
 driver(x, driver = "")
 
@@ -36,7 +42,9 @@ unvsicurl(x)
 character vector
 }
 \description{
-Add required prefixes, or remove them.
+Add required prefixes, or remove them. The \verb{/vsiXXX/} prefixes chain, exactly
+as GDAL's virtual filesystem chains, so they compose by nesting, e.g.
+\code{vsizip(vsicurl(x))} gives \code{"/vsizip//vsicurl/<x>"}.
 }
 \examples{
 vsicurl("https://netcdf-r-us.org/f.nc")
@@ -46,6 +54,9 @@ driver("somefile.h5", "HDF5")
 unvsicurl("/vsicurl/https://netcdf-r-us.org/f.nc")
 
 unprefix("NETCDF:/u/user/somefile.nc")
+
+## chaining virtual filesystems
+vsizip(vsicurl("https://host/data.zip/inner/layer.shp"))
 
 ## MPC signing
 mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_B04_10m.tif"

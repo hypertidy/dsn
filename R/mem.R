@@ -19,10 +19,10 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #'
 #' @param x an R array, must be of numeric type (integer is converted to double)
 #' @param extent optional extent of the data in x,y c(xmin, xmax, ymin, ymax)
-#' @param dimension
-#' @param PIXELOFFSET
-#' @param LINEOFFSET
-#' @param BANDOFFSET
+#' @param dimension  size in pixels, ncol, nrow
+#' @param PIXELOFFSET pixel offset
+#' @param LINEOFFSET line offset
+#' @param BANDOFFSET band offset
 #' @param projection projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)
 #'
 #' @return character string, a DSN for use by GDAL

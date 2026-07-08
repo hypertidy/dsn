@@ -1,7 +1,8 @@
-
 #' Prefix handlers for GDAL data source names
 #'
-#' Add required prefixes, or remove them.
+#' Add required prefixes, or remove them. The `/vsiXXX/` prefixes chain, exactly
+#' as GDAL's virtual filesystem chains, so they compose by nesting, e.g.
+#' `vsizip(vsicurl(x))` gives `"/vsizip//vsicurl/<x>"`.
 #'
 #' @param x character vector, of data source names (file paths, urls, database connection strings, or GDAL dsn)
 #' @param driver character vector of appropriate GDAL driver name
@@ -20,13 +21,16 @@
 #'
 #' unprefix("NETCDF:/u/user/somefile.nc")
 #'
+#' ## chaining virtual filesystems
+#' vsizip(vsicurl("https://host/data.zip/inner/layer.shp"))
+#'
 #' ## MPC signing
 #' mpc <- "https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/.../T43DFE_B04_10m.tif"
 #' vsicurl(mpc , sign = TRUE)
 vsicurl <- function(x, sign = FALSE) {
   if (sign) {
     sprintf("/vsicurl?pc_url_signing=yes&url=%s", x)
- } else {
+  } else {
     sprintf("/vsicurl/%s", x)
   }
 }
@@ -40,7 +44,19 @@ vsizip <- function(x) {
 #' @export
 #' @name prefix
 vsis3 <- function(x) {
-  sprintf("/vsizip/%s", x)
+  sprintf("/vsis3/%s", x)
+}
+
+#' @export
+#' @name prefix
+vsitar <- function(x) {
+  sprintf("/vsitar/%s", x)
+}
+
+#' @export
+#' @name prefix
+vsigzip <- function(x) {
+  sprintf("/vsigzip/%s", x)
 }
 
 #' @name prefix

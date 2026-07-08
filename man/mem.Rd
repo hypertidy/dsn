@@ -20,6 +20,14 @@ mem(
 \item{extent}{optional extent of the data in x,y c(xmin, xmax, ymin, ymax)}
 
 \item{projection}{projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)}
+
+\item{dimension}{size in pixels, ncol, nrow}
+
+\item{PIXELOFFSET}{pixel offset}
+
+\item{LINEOFFSET}{line offset}
+
+\item{BANDOFFSET}{band offset}
 }
 \value{
 character string, a DSN for use by GDAL

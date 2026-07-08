@@ -6,22 +6,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Data Source Name and Description Helpers for Use With GDAL • dsn</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Data Source Name and Description Helpers for Use With GDAL">
-<meta property="og:description" content="Simple helpers for GDAL data source names (DSN), prefix and 
- suffix and other handling. GDAL is the Geospatial Data Abstraction Library, 
- not used by this package directly. ">
+<meta property="og:description" content="Simple helpers for GDAL data source names (DSN), prefix and suffix and other handling. GDAL is the Geospatial Data Abstraction Library, not used by this package directly.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -52,7 +50,7 @@
 <li>
   <a href="https://github.com/hypertidy/dsn/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -63,7 +61,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -141,7 +139,7 @@ Aerial imagery and the volcano dataset contoured on top
 <h2 id="real-world-example">Real world example<a class="anchor" aria-label="anchor" href="#real-world-example"></a>
 </h2>
 <p>Here is a less basic and real world example.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>https<span class="sc">:</span><span class="er">//</span>www.ncei.noaa.gov<span class="sc">/</span>data<span class="sc">/</span>sea<span class="sc">-</span>surface<span class="sc">-</span>temperature<span class="sc">-</span>optimum<span class="sc">-</span>interpolation<span class="sc">/</span>v2<span class="fl">.1</span><span class="sc">/</span>access<span class="sc">/</span>avhrr<span class="sc">/</span><span class="dv">202109</span><span class="sc">/</span>oisst<span class="sc">-</span>avhrr<span class="sc">-</span>v02r01.<span class="fl">20210930.</span>nc</span></code></pre></div>
 <p>These files have four variables and so need to be referenced using subdataset syntax. They are online so we need GDAL’s virtual file system <a href="https://gdal.org/user/virtual_file_systems.html" class="external-link">vsicurl</a> to access it. Also, they are <a href="https://github.com/mdsumner/fixoisst" class="external-link">non-compliant NetCDF</a> in that they don’t declare in a robust way what their coordinate reference system is (it’s longlat).</p>
 <p>(Even if you have the files locally you still need the subdataset and crs handling).</p>
 <p>So, we can find this stuff out with investigation. See there are subdatasets <code>sst</code>, <code>anom</code>, <code>err</code>, <code>ice</code>.</p>
@@ -218,41 +216,41 @@ Aerial imagery and the volcano dataset contoured on top
 <span><span class="co">## and with that tiny bit of text we are also language independent</span></span>
 <span><span class="co">## (but my python installation is not up to scratch yet ...)</span></span></code></pre></div>
 <p>Here is a gdalinfo output just to prove it works (requires GDAL 3.7 for the <code>vrt://...?a_srs</code> syntax).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gdalinfo <span class="st">"vrt://NETCDF:</span><span class="sc">\"</span><span class="st">/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc</span><span class="sc">\"</span><span class="st">:sst?a_srs=OGC:CRS84"</span> <span class="sc">-</span>nomd</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Driver<span class="sc">:</span> VRT<span class="sc">/</span>Virtual Raster</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Files<span class="sc">:</span> NETCDF<span class="sc">:</span><span class="st">"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span><span class="sc">:</span>sst</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>Size is <span class="dv">1440</span>, <span class="dv">720</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Coordinate System is<span class="sc">:</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>GEOGCRS[<span class="st">"WGS 84"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    DATUM[<span class="st">"World Geodetic System 1984"</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        ELLIPSOID[<span class="st">"WGS 84"</span>,<span class="dv">6378137</span>,<span class="fl">298.257223563</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            LENGTHUNIT[<span class="st">"metre"</span>,<span class="dv">1</span>]],</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">6326</span>]],</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    PRIMEM[<span class="st">"Greenwich"</span>,<span class="dv">0</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>],</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">8901</span>]],</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    CS[ellipsoidal,<span class="dv">2</span>],</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"longitude"</span>,east,</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">1</span>],</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]],</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        AXIS[<span class="st">"latitude"</span>,north,</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            ORDER[<span class="dv">2</span>],</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]]]</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>Data axis to CRS axis mapping<span class="sc">:</span> <span class="dv">1</span>,<span class="dv">2</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>Origin <span class="ot">=</span> (<span class="fl">0.000000000000000</span>,<span class="fl">90.000000000000000</span>)</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>Pixel Size <span class="ot">=</span> (<span class="fl">0.250000000000000</span>,<span class="sc">-</span><span class="fl">0.250000000000000</span>)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>Corner Coordinates<span class="sc">:</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>Upper <span class="fu">Left</span>  (   <span class="fl">0.0000000</span>,  <span class="fl">90.0000000</span>) (  0d <span class="dv">0</span><span class="st">' 0.01"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"N)</span></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="st">Lower Left  (   0.0000000, -90.0000000) (  0d 0' 0.01"</span>E, 90d <span class="dv">0</span><span class="st">' 0.00"S)</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="st">Upper Right (     360.000,      90.000) (360d 0'</span> <span class="fl">0.00</span><span class="st">"E, 90d 0' 0.00"</span>N)</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>Lower <span class="fu">Right</span> (     <span class="fl">360.000</span>,     <span class="sc">-</span><span class="fl">90.000</span>) (360d <span class="dv">0</span><span class="st">' 0.00"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"S)</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="st">Center      ( 180.0000000,   0.0000000) (180d 0' 0.00"</span>E,  0d <span class="dv">0</span><span class="st">' 0.01"N)</span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="st">Band 1 Block=1440x720 Type=Int16, ColorInterp=Undefined</span></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="st">  NoData Value=-999</span></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="st">  Unit Type: Celsius</span></span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="st">  Offset: 0,   Scale:0.00999999977648258</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>gdalinfo <span class="st">"vrt://NETCDF:</span><span class="sc">\"</span><span class="st">/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc</span><span class="sc">\"</span><span class="st">:sst?a_srs=OGC:CRS84"</span> <span class="sc">-</span>nomd</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>Driver<span class="sc">:</span> VRT<span class="sc">/</span>Virtual Raster</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>Files<span class="sc">:</span> NETCDF<span class="sc">:</span><span class="st">"/vsicurl/https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc"</span><span class="sc">:</span>sst</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>Size is <span class="dv">1440</span>, <span class="dv">720</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>Coordinate System is<span class="sc">:</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>GEOGCRS[<span class="st">"WGS 84"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>    DATUM[<span class="st">"World Geodetic System 1984"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>        ELLIPSOID[<span class="st">"WGS 84"</span>,<span class="dv">6378137</span>,<span class="fl">298.257223563</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>            LENGTHUNIT[<span class="st">"metre"</span>,<span class="dv">1</span>]],</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">6326</span>]],</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>    PRIMEM[<span class="st">"Greenwich"</span>,<span class="dv">0</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>        ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>],</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>        ID[<span class="st">"EPSG"</span>,<span class="dv">8901</span>]],</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>    CS[ellipsoidal,<span class="dv">2</span>],</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>        AXIS[<span class="st">"longitude"</span>,east,</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>            ORDER[<span class="dv">1</span>],</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]],</span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>        AXIS[<span class="st">"latitude"</span>,north,</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>            ORDER[<span class="dv">2</span>],</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>            ANGLEUNIT[<span class="st">"degree"</span>,<span class="fl">0.0174532925199433</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>                ID[<span class="st">"EPSG"</span>,<span class="dv">9122</span>]]]]</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>Data axis to CRS axis mapping<span class="sc">:</span> <span class="dv">1</span>,<span class="dv">2</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>Origin <span class="ot">=</span> (<span class="fl">0.000000000000000</span>,<span class="fl">90.000000000000000</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>Pixel Size <span class="ot">=</span> (<span class="fl">0.250000000000000</span>,<span class="sc">-</span><span class="fl">0.250000000000000</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a>Corner Coordinates<span class="sc">:</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>Upper <span class="fu">Left</span>  (   <span class="fl">0.0000000</span>,  <span class="fl">90.0000000</span>) (  <span class="dv">0</span>d <span class="dv">0</span><span class="st">' 0.01"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"N)</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="st">Lower Left  (   0.0000000, -90.0000000) (  0d 0' 0.01"</span>E, <span class="dv">90</span>d <span class="dv">0</span><span class="st">' 0.00"S)</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="st">Upper Right (     360.000,      90.000) (360d 0'</span> <span class="fl">0.00</span><span class="st">"E, 90d 0' 0.00"</span>N)</span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a>Lower <span class="fu">Right</span> (     <span class="fl">360.000</span>,     <span class="sc">-</span><span class="fl">90.000</span>) (<span class="dv">360</span>d <span class="dv">0</span><span class="st">' 0.00"E, 90d 0'</span> <span class="fl">0.00</span><span class="st">"S)</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="st">Center      ( 180.0000000,   0.0000000) (180d 0' 0.00"</span>E,  <span class="dv">0</span>d <span class="dv">0</span><span class="st">' 0.01"N)</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="st">Band 1 Block=1440x720 Type=Int16, ColorInterp=Undefined</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="st">  NoData Value=-999</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="st">  Unit Type: Celsius</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="st">  Offset: 0,   Scale:0.00999999977648258</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -296,7 +294,7 @@ Aerial imagery and the volcano dataset contoured on top
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Michael Sumner <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Michael Sumner <br><small class="roles"> Author, maintainer </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -319,16 +317,16 @@ Aerial imagery and the volcano dataset contoured on top
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

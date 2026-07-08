@@ -74,11 +74,13 @@ netcdf <- function(x) {
 #' @name prefix
 #' @export
 unprefix <- function(x) {
-  gsub(".*:", "", x)
+  ## strip exactly one leading driver prefix; a prefix is 2+ chars so
+  ## Windows drive letters ("C:/file.tif") are left alone
+  sub("^[A-Za-z][A-Za-z0-9_]+:", "", x)
 }
 
 #' @name prefix
 #' @export
 unvsicurl <- function(x) {
-  gsub("/vsicurl/", "", x)
+  sub("^/vsicurl/", "", x)
 }

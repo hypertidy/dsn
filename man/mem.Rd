@@ -15,13 +15,13 @@ mem(
 )
 }
 \arguments{
-\item{x}{an R array, must be of numeric type (integer is converted to double)}
+\item{x}{an R array of numeric (double) type, see Details}
 
 \item{extent}{optional extent of the data in x,y c(xmin, xmax, ymin, ymax)}
 
 \item{projection}{projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)}
 
-\item{dimension}{size in pixels, ncol, nrow}
+\item{dimension}{size in pixels c(PIXELS, LINES), defaults to \code{dim(x)}, see Details}
 
 \item{PIXELOFFSET}{pixel offset}
 
@@ -33,14 +33,31 @@ mem(
 character string, a DSN for use by GDAL
 }
 \description{
-An array in memory can be referenced by a GDAL data source.
+An array in memory can be referenced by a GDAL data source. The DSN points
+directly at the memory of \code{x}, no copy is made.
 }
 \details{
-This DSN will only work in R, and is only for use with GDAL read and query tools (so terra, sf, gdalcubes, vapour, etc.).
+The DSN is only valid while \code{x} is alive and unmodified: keep a reference
+to \code{x} for as long as the DSN is in use, or R's garbage collector may free
+or reuse that memory. For the same reason \code{x} must already be a double
+array (\code{storage.mode(x) <- "double"} to convert beforehand); \code{mem()} will
+not convert it for you, because converting makes a temporary copy whose
+memory does not survive this function returning.
+
+This DSN only works in the current R session, with GDAL read and query
+tools (terra, sf, gdalcubes, vapour, gdalraster, etc.). Since GDAL 3.10,
+opening a \code{MEM:::DATAPOINTER} DSN is disabled by default for security
+reasons: set the configuration option \code{GDAL_MEM_ENABLE_OPEN=YES} (e.g.
+\code{Sys.setenv(GDAL_MEM_ENABLE_OPEN = "YES")}) to allow it.
+
+\code{dimension} defaults to \code{dim(x)}; for an R matrix that is \verb{(nrow, ncol)}
+used as \verb{(PIXELS, LINES)}, so GDAL scanlines run down the columns of the R
+matrix (memory order is preserved, orientation is transposed relative to
+the on-screen orientation of \code{\link[graphics:image]{graphics::image()}}).
 }
 \examples{
-m <- matrix(as.integer(c(0L, 0, 0, 1)), 5L, 4L)
-mem(m)
 mem(volcano)
 
+m <- matrix(c(0, 0, 0, 1), 5L, 4L)
+mem(m)
 }

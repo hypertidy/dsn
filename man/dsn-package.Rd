@@ -4,9 +4,9 @@
 \name{dsn-package}
 \alias{dsn}
 \alias{dsn-package}
-\title{dsn: Data Source Name and Description Helpers for Use With 'GDAL'}
+\title{dsn: Data Source Name and Description Helpers for Use with 'GDAL'}
 \description{
-Simple helpers for 'GDAL' data source names ('DSN'), prefix and suffix and other handling. 'GDAL' is the Geospatial Data Abstraction Library, not used by this package directly.
+Simple helpers for 'GDAL' data source names ('DSN'), prefix and suffix and other handling. 'GDAL' is the Geospatial Data Abstraction Library \url{https://gdal.org/}, not used by this package directly.
 }
 \seealso{
 Useful links:
@@ -27,7 +27,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Matt Dowle (wrote the source code used here in C_addr, originally in data.table) [contributor]
+  \item Matt Dowle (original idea for C_addr, from data.table::address) [contributor]
 }
 
 }

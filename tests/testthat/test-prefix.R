@@ -41,3 +41,15 @@ test_that("vsicurl signing", {
 test_that("un-prefix round trips", {
   expect_equal(unvsicurl(vsicurl("https://h/f.nc")), "https://h/f.nc")
 })
+
+test_that("unprefix strips one leading driver prefix only", {
+  expect_equal(unprefix("NETCDF:/u/user/somefile.nc"), "/u/user/somefile.nc")
+  expect_equal(unprefix("NETCDF:\"a.nc\":var"), "\"a.nc\":var")
+  ## Windows drive letters survive
+  expect_equal(unprefix("C:/foo.tif"), "C:/foo.tif")
+})
+
+test_that("unvsicurl is anchored", {
+  expect_equal(unvsicurl("/vsicurl/https://h/f.tif"), "https://h/f.tif")
+  expect_equal(unvsicurl("https://h/vsicurl/decoy.tif"), "https://h/vsicurl/decoy.tif")
+})

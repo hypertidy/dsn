@@ -12,14 +12,30 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 
 #' Generate a data source name (DSN) for the GDAL MEM driver
 #'
-#' An array in memory can be referenced by a GDAL data source.
+#' An array in memory can be referenced by a GDAL data source. The DSN points
+#' directly at the memory of `x`, no copy is made.
 #'
+#' The DSN is only valid while `x` is alive and unmodified: keep a reference
+#' to `x` for as long as the DSN is in use, or R's garbage collector may free
+#' or reuse that memory. For the same reason `x` must already be a double
+#' array (`storage.mode(x) <- "double"` to convert beforehand); `mem()` will
+#' not convert it for you, because converting makes a temporary copy whose
+#' memory does not survive this function returning.
 #'
-#' This DSN will only work in R, and is only for use with GDAL read and query tools (so terra, sf, gdalcubes, vapour, etc.).
+#' This DSN only works in the current R session, with GDAL read and query
+#' tools (terra, sf, gdalcubes, vapour, gdalraster, etc.). Since GDAL 3.10,
+#' opening a `MEM:::DATAPOINTER` DSN is disabled by default for security
+#' reasons: set the configuration option `GDAL_MEM_ENABLE_OPEN=YES` (e.g.
+#' `Sys.setenv(GDAL_MEM_ENABLE_OPEN = "YES")`) to allow it.
 #'
-#' @param x an R array, must be of numeric type (integer is converted to double)
+#' `dimension` defaults to `dim(x)`; for an R matrix that is `(nrow, ncol)`
+#' used as `(PIXELS, LINES)`, so GDAL scanlines run down the columns of the R
+#' matrix (memory order is preserved, orientation is transposed relative to
+#' the on-screen orientation of [graphics::image()]).
+#'
+#' @param x an R array of numeric (double) type, see Details
 #' @param extent optional extent of the data in x,y c(xmin, xmax, ymin, ymax)
-#' @param dimension  size in pixels, ncol, nrow
+#' @param dimension size in pixels c(PIXELS, LINES), defaults to `dim(x)`, see Details
 #' @param PIXELOFFSET pixel offset
 #' @param LINEOFFSET line offset
 #' @param BANDOFFSET band offset
@@ -28,14 +44,15 @@ geo_transform0 <- function (px, ul, sh = c(0, 0))
 #' @return character string, a DSN for use by GDAL
 #' @export
 #' @examples
-#' m <- matrix(as.integer(c(0L, 0, 0, 1)), 5L, 4L)
-#' mem(m)
 #' mem(volcano)
 #'
+#' m <- matrix(c(0, 0, 0, 1), 5L, 4L)
+#' mem(m)
 mem <- function(x, extent = NULL, projection = "", dimension = NULL, PIXELOFFSET = NULL, LINEOFFSET  = NULL, BANDOFFSET = NULL) {
-  ## can't get Byte or Int32 to work
+  if (!is.double(x)) {
+    stop("'x' must be a double array ('storage.mode(x) <- \"double\"' to convert first);\n mem() does not copy or convert, the DSN references the memory of 'x' directly")
+  }
   type <- "Float64"
-  x <- x * 1.0  ## make sure it's double haha
   if (is.null(dimension)) {
     dimension <- dim(x)
   }
@@ -49,22 +66,16 @@ mem <- function(x, extent = NULL, projection = "", dimension = NULL, PIXELOFFSET
   if (is.null(LINEOFFSET)) LINEOFFSET <- 0
   if (is.null(BANDOFFSET)) BANDOFFSET <- offset * prod(dimension[1:2])
 
-  # type <-  switch(typeof(x),
-  #                 integer = "Int32",
-  #                double = "Float64",
-  #                 raw = "Byte")
   gt <- ext_dim(extent, dimension)
 
-  addr <- as.double(addr(x)) + 6 * offset
-
-  spatialref <- ""
+  ## address of the data of x (not the SEXP), as a decimal string
+  addr <- addr(x)
 
   dsn <- sprintf(
-  "MEM:::DATAPOINTER=\"%s\",PIXELS=%i,LINES=%i,BANDS=%i,DATATYPE=%s,GEOTRANSFORM=%s,PIXELOFFSET=%i,LINEOFFSET=%i,BANDOFFSET=%i",
+  "MEM:::DATAPOINTER=%s,PIXELS=%i,LINES=%i,BANDS=%i,DATATYPE=%s,GEOTRANSFORM=%s,PIXELOFFSET=%i,LINEOFFSET=%i,BANDOFFSET=%i",
    addr, dimension[1L], dimension[2L], d3, type, paste(gt, collapse = "/"), PIXELOFFSET, LINEOFFSET, BANDOFFSET)
   if (!is.null(projection) && length(projection) > 0 && !is.na(projection) && is.character(projection) && nzchar(projection)) {
-    spatialref <- sprintf("SPATIALREFERENCE=\"%s\"", projection[1L])
-    dsn <- sprintf("%s,%s", dsn, spatialref)
+    dsn <- sprintf("%s,SPATIALREFERENCE=\"%s\"", dsn, projection[1L])
   }
   dsn
 
@@ -72,15 +83,14 @@ mem <- function(x, extent = NULL, projection = "", dimension = NULL, PIXELOFFSET
 
 
 
-#' Get address of object
+#' Get address of the data of an object
 #'
-#' This is primarily for use by mem().
-#'
-#' Adapted from data.table::address
+#' This is primarily for use by mem(). Returns the address of the data
+#' payload of a vector (not the SEXP header) as a decimal string.
 #'
 #' @param x object to get address of
 #'
-#' @return address as a string
+#' @return address as a decimal string
 #'
 #' @noRd
 addr <- function(x) {

@@ -10,3 +10,4 @@
 ^gdalwmscache$
 ^\.positai$
 ^\.claude$
+^cran-comments\.md$

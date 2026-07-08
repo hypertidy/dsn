@@ -25,10 +25,10 @@ The goal of dsn is to provide simple helpers for [GDAL](https://gdal.org/) data 
 
 Please note that dsn is not doing anything *with GDAL*, this is pure string handling for things commonly used for GDAL: 
 
-- prefixing `/vsicurl/` to an online data source url for [GDAL's Virtual File System](https://gdal.org/user/virtual_file_systems.html)
+- prefixing `/vsicurl/` to an online data source url for [GDAL's Virtual File System](https://gdal.org/en/stable/user/virtual_file_systems.html)
 - prefixing a driver declaration to a data source, e.g. `HDF5:/my/files/data.h5` or `NETCDF:C:/temp/nc/afile.nc`
-- wrapping a [subdataset](https://gdal.org/user/raster_data_model.html#subdatasets-domain)  declaration, e.g. `NETCDF:/myfiles/data.nc:variable` that can occur in [NETCDF](https://gdal.org/drivers/raster/netcdf.html#multiple-image-handling-subdatasets) and similar formats
-- wrapping a [VRT connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string), e.g. `vrt://myfile.tif?bands=3,2,1`
+- wrapping a [subdataset](https://gdal.org/en/stable/user/raster_data_model.html)  declaration, e.g. `NETCDF:/myfiles/data.nc:variable` that can occur in [NETCDF](https://gdal.org/en/stable/drivers/raster/netcdf.html) and similar formats
+- wrapping a [VRT connection](https://gdal.org/en/stable/drivers/raster/vrt.html), e.g. `vrt://myfile.tif?bands=3,2,1`
 - creating a DATAPOINTER connection for the MEM driver, i.e. we can create data arrays as rasters from R
 objects, and use R objects for georeferencing with geolocation arrays (either rectilinear or curvilinear, or degenerate versions of these)
 - datatype helpers for the internal GDT_ types in GDAL
@@ -101,7 +101,7 @@ Here is a less basic and real world example.
 https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/202109/oisst-avhrr-v02r01.20210930.nc
 
 ```
-These files have four variables and so need to be referenced using subdataset syntax.  They are online so we need GDAL's virtual file system [vsicurl](https://gdal.org/user/virtual_file_systems.html) to access it.  Also, they are [non-compliant NetCDF](https://github.com/mdsumner/fixoisst) in that they don't declare in a robust way what their coordinate reference system is (it's longlat). 
+These files have four variables and so need to be referenced using subdataset syntax.  They are online so we need GDAL's virtual file system [vsicurl](https://gdal.org/en/stable/user/virtual_file_systems.html) to access it.  Also, they are [non-compliant NetCDF](https://github.com/mdsumner/fixoisst) in that they don't declare in a robust way what their coordinate reference system is (it's longlat). 
 
 (Even if you have the files locally you still need the subdataset and crs handling). 
 
@@ -134,7 +134,7 @@ Ok so finally we have a solid GDAL DSN that we can use. But, that whole process 
 
 So the dsn package has the following functions `vsicurl()`, `sds()`, and `vrtcon()`. 
 
-`vrtcon()` is for a [VRT connection](https://gdal.org/drivers/raster/vrt.html#vrt-connection-string) string, a compact and dependency free syntax for augmenting GDAL data source names, there are new features coming for that in GDAL 3.7. 
+`vrtcon()` is for a [VRT connection](https://gdal.org/en/stable/drivers/raster/vrt.html) string, a compact and dependency free syntax for augmenting GDAL data source names, there are new features coming for that in GDAL 3.7. 
 
 None of this requires GDAL or for any file or URL querying to be done at all. This is useful because *we already did it* many times over many years, and now we want to summarize our hard won knowledge in a simple augmented file or URL DSN. 
 

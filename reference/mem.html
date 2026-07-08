@@ -79,6 +79,22 @@
 <dt id="arg-projection">projection<a class="anchor" aria-label="anchor" href="#arg-projection"></a></dt>
 <dd><p>projection string (optional, sets the SPATIALREFERENCE of the MEM driver since GDAL 3.7)</p></dd>
 
+
+<dt id="arg-dimension">dimension<a class="anchor" aria-label="anchor" href="#arg-dimension"></a></dt>
+<dd><p>size in pixels, ncol, nrow</p></dd>
+
+
+<dt id="arg-pixeloffset">PIXELOFFSET<a class="anchor" aria-label="anchor" href="#arg-pixeloffset"></a></dt>
+<dd><p>pixel offset</p></dd>
+
+
+<dt id="arg-lineoffset">LINEOFFSET<a class="anchor" aria-label="anchor" href="#arg-lineoffset"></a></dt>
+<dd><p>line offset</p></dd>
+
+
+<dt id="arg-bandoffset">BANDOFFSET<a class="anchor" aria-label="anchor" href="#arg-bandoffset"></a></dt>
+<dd><p>band offset</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -93,9 +109,9 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="fl">5L</span>, <span class="fl">4L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">mem</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MEM:::DATAPOINTER=\"94427814428496\",PIXELS=5,LINES=4,BANDS=1,DATATYPE=Float64,GEOTRANSFORM=0/1/0/4/0/-1,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=160"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MEM:::DATAPOINTER=\"94855832884240\",PIXELS=5,LINES=4,BANDS=1,DATATYPE=Float64,GEOTRANSFORM=0/1/0/4/0/-1,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=160"</span>
 <span class="r-in"><span><span class="fu">mem</span><span class="op">(</span><span class="va">volcano</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MEM:::DATAPOINTER=\"94427821545168\",PIXELS=87,LINES=61,BANDS=1,DATATYPE=Float64,GEOTRANSFORM=0/1/0/61/0/-1,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=42456"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MEM:::DATAPOINTER=\"94855930984672\",PIXELS=87,LINES=61,BANDS=1,DATATYPE=Float64,GEOTRANSFORM=0/1/0/61/0/-1,PIXELOFFSET=0,LINEOFFSET=0,BANDOFFSET=42456"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

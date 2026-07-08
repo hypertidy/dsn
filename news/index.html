@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dsn</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.9012</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -47,6 +47,25 @@
       <small>Source: <a href="https://github.com/hypertidy/dsn/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.0" id="dsn-010">dsn 0.1.0<a class="anchor" aria-label="anchor" href="#dsn-010"></a></h2>
+<ul><li><p>mem() no longer copies or converts its input: ‘x’ must be a double array and the DSN references its memory directly. Previously the address taken was of an internal temporary copy, eligible for garbage collection as soon as mem() returned.</p></li>
+<li><p>C_addr now returns the address of the data of a vector (not the SEXP), as a decimal string. This is portable to Windows (where ‘%p’ omits the ‘0x’ prefix) and removes the fixed header-offset arithmetic in mem(), which is also what prevented non-double types from working.</p></li>
+<li><p>mem() documents the GDAL &gt;= 3.10 requirement to set GDAL_MEM_ENABLE_OPEN=YES, and the lifetime contract for the referenced memory.</p></li>
+<li><p>Native routine registration now actually occurs (the init function was misnamed R_init_addr, so registration silently never ran).</p></li>
+<li><p>unprefix() strips exactly one leading driver prefix and no longer eats Windows drive letters or subdataset paths; unvsicurl() is anchored to the start of the string.</p></li>
+<li><p>Removed unexported experimental rds().</p></li>
+<li><p>Add vsis3 and vsizip.</p></li>
+<li><p>All data source functions have been removed to sds.</p></li>
+<li><p>New internal C_addr, to replace lobstr import.</p></li>
+<li><p><code><a href="../reference/prefix.html">vsicurl()</a></code> gains pc_url_signing with the <code>sign</code> arg (GDAL &gt;= 3.5).</p></li>
+<li><p>All data source functions have been removed to hypertidy/sds, so countrycode no longer needed.</p></li>
+<li><p>New <code>nsdic_seaice()</code> for the GeoTIFF images.</p></li>
+<li><p>New <code>srtm15()</code> source.</p></li>
+<li><p>Add internal lists of tasmap_sources.</p></li>
+<li><p>Fix gebco to use ice surface, add bedrock option for 2023 (thanks to Philippe Massicotte).</p></li>
+<li><p>Clarify which gebco() functions return bedrock vs. ice surface.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.1" id="dsn-001">dsn 0.0.1<a class="anchor" aria-label="anchor" href="#dsn-001"></a></h2>
 <ul><li><p>New ‘nasadem()’ for the OpenTopo VRT.</p></li>

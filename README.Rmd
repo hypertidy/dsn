@@ -36,7 +36,6 @@ objects, and use R objects for georeferencing with geolocation arrays (either re
 
 
 
-Please see the Python package [osgeo.gdal](matrix(x[[1]], attr(x, "dimension")[2L], byrow = TRUE)) or the R package [vapour::vapour_vrt()](https://hypertidy.github.io/vapour/reference/vapour_vrt.html) for actual use of GDAL to extend a data source name by opening the source and augmenting available information. dsn is intended to support that usage, and in general intends to be purely string handling, and not make use of the format libraries at all. 
 
 ## Installation
 

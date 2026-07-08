@@ -36,15 +36,6 @@ string handling for things commonly used for GDAL:
 - creating GCP lists for use with VRT, for simple extent georeferencing
   or full polynomial ground control point registration
 
-Please see the Python package
-[osgeo.gdal](matrix(x%5B%5B1%5D%5D,%20attr(x,%20%22dimension%22)%5B2L%5D,%20byrow%20=%20TRUE))
-or the R package
-[vapour::vapour_vrt()](https://hypertidy.github.io/vapour/reference/vapour_vrt.html)
-for actual use of GDAL to extend a data source name by opening the
-source and augmenting available information. dsn is intended to support
-that usage, and in general intends to be purely string handling, and not
-make use of the format libraries at all.
-
 ## Installation
 
 You can install the development version of dsn from

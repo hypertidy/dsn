@@ -1,5 +1,7 @@
 # dev
 
+* Add vsis3 and vsizip. 
+
 * All data source functions have been removed to spatial.datasources. 
 
 * New `nsdic_seaice()` for the GeoTIFF images. 

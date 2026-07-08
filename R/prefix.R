@@ -22,6 +22,18 @@ vsicurl <- function(x) {
   sprintf("/vsicurl/%s", x)
 }
 
+#' @export
+#' @name prefix
+vsizip <- function(x) {
+  sprintf("/vsizip/%s", x)
+}
+
+#' @export
+#' @name prefix
+vsis3 <- function(x) {
+  sprintf("/vsizip/%s", x)
+}
+
 #' @name prefix
 #' @export
 driver <- function(x, driver = "") {

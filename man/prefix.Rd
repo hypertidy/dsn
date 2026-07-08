@@ -3,6 +3,8 @@
 \name{prefix}
 \alias{prefix}
 \alias{vsicurl}
+\alias{vsizip}
+\alias{vsis3}
 \alias{driver}
 \alias{netcdf}
 \alias{unprefix}
@@ -10,6 +12,10 @@
 \title{Prefix handlers for GDAL data source names}
 \usage{
 vsicurl(x)
+
+vsizip(x)
+
+vsis3(x)
 
 driver(x, driver = "")
 

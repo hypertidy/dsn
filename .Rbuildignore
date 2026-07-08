@@ -8,3 +8,5 @@
 ^dsn.*\.tar\.gz$
 ^dsn.*\.tgz$
 ^gdalwmscache$
+^\.positai$
+^\.claude$
